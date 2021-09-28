@@ -5,8 +5,7 @@ let array = [];
 
 async function makeServiceCall() {
   const first = await axios.get(URL.POKEMON);
-  const A = first.data.results.slice(0, 9);
-  return A;
+  return first.data.results.slice(0, 9);
 }
 
 async function getFromApi(req, res, next) {
@@ -62,7 +61,12 @@ axios
         res.json(all); 
         */
 
+  async function getFromId(req, res, next) {
+    const { id } = req.params;
+  }
+
 module.exports = {
   getFromApi,
   newPokemon,
+  getFromId,
 };
