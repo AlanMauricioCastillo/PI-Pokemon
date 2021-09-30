@@ -28,7 +28,6 @@ module.exports = (sequelize) => {
       },
       Imagen: {
         type: DataTypes.STRING,
-        allowNull: false,
       },
       Defensa: {
         type: DataTypes.INTEGER, //// stats[2].base_stats === numero de defensa

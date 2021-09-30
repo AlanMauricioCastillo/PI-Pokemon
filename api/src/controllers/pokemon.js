@@ -20,51 +20,51 @@ const apiCall = async () => {
 };
 
 const getThemAll = async (req, res, next) => {
-  const { name } = req.query
+  const { name } = req.query;
   if (name) return next();
   try {
-      let arrOfPromeses = [];
-      const pDb = await Pokemon.findAndCountAll({
-        model: Pokemon,
-        limit: 4,
+    let arrOfPromeses = [];
+    const pDb = await Pokemon.findAndCountAll({
+      model: Pokemon,
+      limit: 4,
+    });
+    pDb.rows.forEach(async (e) => {
+      let arr = [];
+      const values = await PokemonType.findAll({
+        where: { PokemonId: e.id },
       });
-      pDb.rows.forEach(async (e) => {
-        let arr = [];
-        const values = await PokemonType.findAll({
-          where: { PokemonId: e.id },
-        });
-        values.forEach((e) => {
-          arr.push(e.TypeNombre);
-        });
+      values.forEach((e) => {
+        arr.push(e.TypeNombre);
+      });
+      array.push({
+        id: e.id,
+        name: e.Nombre,
+        types: arr.map((tipo) => tipo),
+        imagen: e.Imagen,
+        fuerza: e.Fuerza,
+      });
+    });
+    const pokemonApi = await apiCall();
+    pokemonApi.forEach((element) => {
+      arrOfPromeses.push(axios.get(element.url));
+    });
+    await Promise.all(arrOfPromeses).then((e) => {
+      e.forEach((result) => {
+        let pokemon = result.data;
         array.push({
-          id: e.id,
-          name: e.Nombre,
-          types: arr.map((tipo) => tipo),
-          imagen: e.Imagen,
-          fuerza: e.Fuerza,
+          id: pokemon.id,
+          name: pokemon.name,
+          types: pokemon.types.map((e) => e.type.name),
+          imagen: pokemon.sprites.other["official-artwork"].front_default,
+          fuerza: pokemon.stats[1].base_stat,
         });
       });
-      const pokemonApi = await apiCall();
-      pokemonApi.forEach((element) => {
-        arrOfPromeses.push(axios.get(element.url));
-      });
-      await Promise.all(arrOfPromeses).then((e) => {
-        e.forEach((result) => {
-          let pokemon = result.data;
-          array.push({
-            id: pokemon.id,
-            name: pokemon.name,
-            types: pokemon.types.map((e) => e.type.name),
-            imagen: pokemon.sprites.other["official-artwork"].front_default,
-            fuerza: pokemon.stats[1].base_stat,
-          });
-        });
-      });
-      res.json({ pokemons: array });
-      array = [];
-    } catch (err) {
-      next(err);
-    }
+    });
+    res.json({ pokemons: array });
+    array = [];
+  } catch (err) {
+    next(err);
+  }
 };
 
 const getFromId = async (req, res, next) => {
@@ -132,7 +132,6 @@ const getFromName = async (req, res, next) => {
       res.json(obj);
     } else {
       const result2 = await axios.get(URL.POKEMON_NAME + name);
-
       const obj = {
         nombre: result2.data.name,
         id: result2.data.id,
@@ -148,7 +147,8 @@ const getFromName = async (req, res, next) => {
       res.json(obj);
     }
   } catch (error) {
-    next(error);
+    console.log(error)
+    res.status(404).send('El pokemon ingresado no existe');
   }
 };
 
