@@ -13,9 +13,5 @@ const router = Router();
 
 router.get('/', getAll)
 
-router.post('/', (req, res) => {
-  res.send('soy el post de types')
-})
-
 
 module.exports = router;
