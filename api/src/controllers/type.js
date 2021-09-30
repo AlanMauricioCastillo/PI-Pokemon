@@ -4,8 +4,8 @@ const axios = require("axios");
 
 const bulk = async () => {
   const call = await axios.get(URL.POKEMON_TYPE);
-  const arr = call.data.results.map((e) => ({ 
-    Nombre: e.name 
+  const arr = call.data.results.map((e) => ({
+    Nombre: e.name,
   }));
   const result = await Type.bulkCreate(arr);
   return result;
@@ -14,11 +14,10 @@ const bulk = async () => {
 const getAll = async (req, res, next) => {
   try {
     const typesDb = await Type.findAll();
-    if(!typesDb.length) {
+    if (!typesDb.length) {
       const firstCall = await bulk();
       res.json(firstCall);
-    }
-    else res.json(typesDb);
+    } else res.json(typesDb);
   } catch (err) {
     next(err);
   }
