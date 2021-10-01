@@ -205,21 +205,18 @@ const getPaged = async (req, res, next) => {
   const { page } = req.params;
   let pages = [];
   let pokemonsOnPages = [];
-  let arrOfPromeses = [];
   try {
-    if (page < 1 || page > 93) {
-      return res.status(404).send("Ingrese un numero valido entre 1 y 93");
-    } else {
-      if (page <= 75) {
-        for (let i = page * 12 - 12; i < page * 12; i++) {
-          let sum = i + 1;
-          const call = await axios.get(URL.POKEMON_ID + sum);
+    let count = await Pokemon.count();
+    if (page < 1) {
+      if (count > 3) {
+        for (let i = 6; i < 41; i++) {
+          const call = await axios.get(URL.POKEMON_ID + i);
           pokemonsOnPages.push(call);
         }
       } else {
-        for (let i = page * 12 - 12; i < page * 12; i++) {
-          let sum = i + 9101;
-          const call = await axios.get(URL.POKEMON_ID + sum);
+        let size = 9 - count;
+        for (let i = size + 1; i < 41; i++) {
+          const call = await axios.get(URL.POKEMON_ID + i);
           pokemonsOnPages.push(call);
         }
       }
@@ -232,9 +229,36 @@ const getPaged = async (req, res, next) => {
         });
       });
       return res.json({ pokemons: pages });
+    } else {
+      if (page < 1 || page > 93) {
+        return res.status(404).send("Ingrese un numero valido entre 1 y 93");
+      } else {
+        if (page <= 75) {
+          for (let i = page * 12 - 12; i < page * 12; i++) {
+            let sum = i + 1;
+            const call = await axios.get(URL.POKEMON_ID + sum);
+            pokemonsOnPages.push(call);
+          }
+        } else {
+          for (let i = page * 12 - 12; i < page * 12; i++) {
+            let sum = i + 9101;
+            const call = await axios.get(URL.POKEMON_ID + sum);
+            pokemonsOnPages.push(call);
+          }
+        }
+        pokemonsOnPages.forEach((result) => {
+          let pokemon = result.data;
+          pages.push({
+            id: pokemon.id,
+            name: pokemon.name,
+            imagen: pokemon.sprites.other["official-artwork"].front_default,
+          });
+        });
+        return res.json({ pokemons: pages });
+      }
     }
   } catch (err) {
-    next(err);
+    //next(err);
   }
 };
 
