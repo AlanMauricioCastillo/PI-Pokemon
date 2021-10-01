@@ -105,7 +105,8 @@ const getFromId = async (req, res, next) => {
       res.json(obj);
     }
   } catch (error) {
-    next(error);
+    console.log(error);
+    res.status(404).send("El id de pokemon ingresado no existe");
   }
 };
 
@@ -147,8 +148,8 @@ const getFromName = async (req, res, next) => {
       res.json(obj);
     }
   } catch (error) {
-    console.log(error)
-    res.status(404).send('El pokemon ingresado no existe');
+    console.log(error);
+    res.status(404).send("El pokemon ingresado no existe");
   }
 };
 
@@ -200,9 +201,47 @@ const newPokemon = async (req, res, next) => {
   }
 };
 
+const getPaged = async (req, res, next) => {
+  const { page } = req.params;
+  let pages = [];
+  let pokemonsOnPages = [];
+  let arrOfPromeses = [];
+  try {
+    if (page < 1 || page > 93) {
+      return res.status(404).send("Ingrese un numero valido entre 1 y 93");
+    } else {
+      if (page <= 75) {
+        for (let i = page * 12 - 12; i < page * 12; i++) {
+          let sum = i + 1;
+          const call = await axios.get(URL.POKEMON_ID + sum);
+          pokemonsOnPages.push(call);
+        }
+      } else {
+        for (let i = page * 12 - 12; i < page * 12; i++) {
+          let sum = i + 9101;
+          const call = await axios.get(URL.POKEMON_ID + sum);
+          pokemonsOnPages.push(call);
+        }
+      }
+      pokemonsOnPages.forEach((result) => {
+        let pokemon = result.data;
+        pages.push({
+          id: pokemon.id,
+          name: pokemon.name,
+          imagen: pokemon.sprites.other["official-artwork"].front_default,
+        });
+      });
+      return res.json({ pokemons: pages });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   getThemAll,
   newPokemon,
   getFromId,
   getFromName,
+  getPaged,
 };
