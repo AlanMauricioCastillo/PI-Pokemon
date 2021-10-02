@@ -210,22 +210,22 @@ const getPaged = async (req, res, next) => {
     if (page < 1) {
       if (count > 3) {
         for (let i = 6; i < 41; i++) {
-          const call = await axios.get(URL.POKEMON_ID + i);
-          pokemonsOnPages.push(call);
+          pokemonsOnPages.push(axios.get(URL.POKEMON_ID + i));
         }
       } else {
         let size = 9 - count;
         for (let i = size + 1; i < 41; i++) {
-          const call = await axios.get(URL.POKEMON_ID + i);
-          pokemonsOnPages.push(call);
+          pokemonsOnPages.push(axios.get(URL.POKEMON_ID + i));
         }
       }
-      pokemonsOnPages.forEach((result) => {
-        let pokemon = result.data;
-        pages.push({
-          id: pokemon.id,
-          name: pokemon.name,
-          imagen: pokemon.sprites.other["official-artwork"].front_default,
+      await Promise.all(pokemonsOnPages).then((e) => {
+        e.forEach((result) => {
+          let pokemon = result.data;
+          pages.push({
+            id: pokemon.id,
+            name: pokemon.name,
+            imagen: pokemon.sprites.other["official-artwork"].front_default,
+          });
         });
       });
       return res.json({ pokemons: pages });
@@ -236,29 +236,29 @@ const getPaged = async (req, res, next) => {
         if (page <= 75) {
           for (let i = page * 12 - 12; i < page * 12; i++) {
             let sum = i + 1;
-            const call = await axios.get(URL.POKEMON_ID + sum);
-            pokemonsOnPages.push(call);
+            pokemonsOnPages.push(axios.get(URL.POKEMON_ID + sum));
           }
         } else {
           for (let i = page * 12 - 12; i < page * 12; i++) {
             let sum = i + 9101;
-            const call = await axios.get(URL.POKEMON_ID + sum);
-            pokemonsOnPages.push(call);
+            pokemonsOnPages.push(axios.get(URL.POKEMON_ID + sum));
           }
         }
-        pokemonsOnPages.forEach((result) => {
-          let pokemon = result.data;
-          pages.push({
-            id: pokemon.id,
-            name: pokemon.name,
-            imagen: pokemon.sprites.other["official-artwork"].front_default,
+        await Promise.all(pokemonsOnPages).then((e) => {
+          e.forEach((result) => {
+            let pokemon = result.data;
+            pages.push({
+              id: pokemon.id,
+              name: pokemon.name,
+              imagen: pokemon.sprites.other["official-artwork"].front_default,
+            });
           });
         });
         return res.json({ pokemons: pages });
       }
     }
   } catch (err) {
-    //next(err);
+    next(err);
   }
 };
 
