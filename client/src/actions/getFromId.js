@@ -11,7 +11,7 @@ import { CALL } from "../Variables"; /* CALL = {
 
 export function getFromId(id) {
   return async function (dispatch) {
-    const call = await axios(CALL.PAGES + id)
+    const call = await axios(CALL.BY_ID + id)
     console.log(call)
         dispatch({ type: GET_BY_ID, payload: call.data });
   };

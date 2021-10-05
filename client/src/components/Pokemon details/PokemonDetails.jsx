@@ -1,9 +1,19 @@
 import React from "react";
-import { connect, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+//import { connect, useDispatch } from "react-redux";
 import { getFromId } from "../../actions/getFromId";
+import { useParams } from "react-router";
 import "./PokemonDetails.css";
 
-function PokemonDetails({match, pokemon}) {
+export default function PokemonDetails() {
+  const {id_or_query} = useParams()
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(getFromId(id_or_query))
+  }, [])
+  var pokemon = useSelector((state) => state.pokemonsDetails);
+console.log(pokemon, 'ssssssssssssssssssssss')
   //const dispatch = useDispatch();
   
   //componentDidMount(); 
@@ -17,9 +27,13 @@ function PokemonDetails({match, pokemon}) {
   
   
   //const{Title, Poster, Actors, Director, Plot, Rated, Released, Writer, Year} = movie
+  if(pokemon){
   return (
     <div className="pokemon-detail">
     <h1>soy details Pokemon</h1>
+    {/* {
+      <div>{pokemon.data.nombre}</div>
+    } */}
       {/* {
         pokemon
         ?
@@ -55,6 +69,7 @@ function PokemonDetails({match, pokemon}) {
       */}
     </div>
   )
+    } else return <h1>'no hay pokemon'</h1>
 }
 
 /* class Movie extends React.Component {
@@ -107,7 +122,7 @@ function PokemonDetails({match, pokemon}) {
     )
   }
 } */
-
+/* 
 function mapStateToProps(state) {
   return {
     movie: state.movieDetail
@@ -115,3 +130,4 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps)(PokemonDetails);
+ */

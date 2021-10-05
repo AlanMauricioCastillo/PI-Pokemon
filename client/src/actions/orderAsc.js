@@ -1,4 +1,4 @@
-import { ORDER_ASC } from "./index.JS";
+import { ORDER_ASC } from "./index";
 
 export function orderAsc() {
   return {

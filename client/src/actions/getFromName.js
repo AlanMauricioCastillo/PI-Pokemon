@@ -1,4 +1,4 @@
-import { GET_BY_NAME } from "./index.JS";
+import { GET_BY_NAME } from "./index";
 import axios from "axios";
 import { CALL } from "../Variables"; /* CALL = {
   MAIN: BASE + "/pokemons",
@@ -10,7 +10,7 @@ import { CALL } from "../Variables"; /* CALL = {
 
 export function getFromName(name) {
   return async function (dispatch) {
-    const call = await axios(CALL.PAGES + name)
+    const call = await axios(CALL.BY_NAME + name)
     console.log(call)
         dispatch({ type: GET_BY_NAME, payload: call.data });
   };

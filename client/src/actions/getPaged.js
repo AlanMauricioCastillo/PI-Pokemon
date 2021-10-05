@@ -1,4 +1,4 @@
-import { PAGES } from "./index.JS";
+import { PAGES } from "./index";
 import axios from "axios";
 import { CALL } from "../Variables"; /* CALL = {
   MAIN: BASE + "/pokemons",

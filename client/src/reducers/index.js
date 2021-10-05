@@ -12,6 +12,8 @@ import {
 const initialState = {
   pokemons: [],
   pokemonsDetails: {},
+  pokemonsTypes: [],
+	pokemonsFilter: [],
 };
 
 export default function rootReducer(state = initialState, action) {
@@ -22,33 +24,19 @@ export default function rootReducer(state = initialState, action) {
         pokemons: action.payload,
       };
     case GET_BY_ID:
-      const id = state.pokemons.find((e) => e.id === action.payload.id);
-      if (!id) {
         return {
           ...state,
-          pokemons: [...state.pokemons, action.payload],
-        };
-      } else
-        return {
-          ...state,
-          pokemons: [...state.pokemons],
+          pokemonsDetails: action.payload,
         };
     case GET_BY_NAME:
-      const n = state.pokemons.find((e) => e.name === action.payload.name);
-      if (!n) {
         return {
           ...state,
-          pokemons: [...state.pokemons, action.payload],
-        };
-      } else
-        return {
-          ...state,
-          pokemons: [...state.pokemons],
+          pokemonsDetails: action.payload,
         };
     case GET_TYPES:
       return {
         ...state,
-        pokemons: state.pokemons.filter((movie) => movie.id !== action.payload),
+        pokemons: state.pokemonsTypes.filter((movie) => movie.id !== action.payload),
       };
       case ORDER_ASC:
       return {

@@ -1,4 +1,4 @@
-import { ORDER_DES } from "./index.JS";
+import { ORDER_DES } from "./index";
 
 export function orderAsc() {
   return {

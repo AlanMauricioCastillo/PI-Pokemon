@@ -1,5 +1,9 @@
-.cnt {
-    padding-top: 10px;
+.link {
+    color:black;
+    text-decoration: none;
+}
+.link:hover {
+  color: #00F
 }
 .form-container {
     display:flex;
@@ -12,4 +16,32 @@
 }
 .label {
     padding-right: 10px;
+}
+
+.card {
+  background-color : transparent;
+  margin: 20px;
+  width: 18rem;
+  color:black
+}
+
+.card-title {
+  margin-bottom: 15px;
+}
+
+#closeIcon {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 8px;
+  margin-top: 8px;
+}
+
+.card-body {
+  margin-top: 0px !important;
+  padding-top: 0px !important;
+}
+.cards {  
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }

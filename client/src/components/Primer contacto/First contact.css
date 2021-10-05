@@ -16,7 +16,7 @@
   width: 110px;
   height: 30px;
   font-size: 17px;
-  color:rgb(196, 228, 236);
+  color:rgb(76, 102, 109);
   text-align: center;
   font-family: Constantia;
   background: linear-gradient(
@@ -27,7 +27,7 @@
     #1b1218
   );
 }
-button:hover {
+.get:hover {
   background-color: #000000;
   color: white;
 }

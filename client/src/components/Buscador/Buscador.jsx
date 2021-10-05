@@ -9,7 +9,7 @@ import './Buscador.css';
 
 
 function Buscador({getMovies, movies, addMovieFavorite}) {
-  const [title, setTitle] = React.useState('');
+  /* const [title, setTitle] = React.useState('');
 
   function handleChange(event) {
     setTitle(event.target.value);
@@ -18,7 +18,7 @@ function Buscador({getMovies, movies, addMovieFavorite}) {
     event.preventDefault();
     getMovies(title)
     setTitle('')
-  }
+  } */
 
   return (
       <div>

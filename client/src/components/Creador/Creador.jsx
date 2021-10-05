@@ -1,13 +1,11 @@
 import React from "react";
-import { connect } from "react-redux";
-import { Link } from 'react-router-dom';
-import { removeMovieFavorite } from '../../actions/index.js'
+//import { Link } from 'react-router-dom';
 import './Creador.css';
 
 
 
 
-function Creador({favorites, removeMovieFavorite}) {
+export default function Creador() {
   return (
       <div>
         <h2>Creador</h2>
@@ -60,12 +58,12 @@ function Creador({favorites, removeMovieFavorite}) {
   }
 } */
 
-function mapStateToProps(state) {
+/* function mapStateToProps(state) {
   return {
     favorites: state.moviesFavorites,
     detail: state.movieDetail
   };
-}
+} */
 
-
-export default connect(mapStateToProps/* , {removeMovieFavorite} */)(Creador);
+/* 
+export default connect(mapStateToProps/* , {removeMovieFavorite} )(Creador); */
