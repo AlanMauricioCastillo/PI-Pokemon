@@ -1,15 +1,31 @@
 .cnt {
     padding-top: 10px;
 }
-.form-container {
-    display:flex;
-    flex-direction: row;
-    align-items: flex-start;
+.form-containers {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  align-content: center;
 }
 
-.form-container button {
-    margin-left: 20px;
-}
+
 .label {
     padding-right: 10px;
+}
+.pokedex {
+  text-align: center;
+  width:50px;
+  height:50px;
+  background: url("pokedex.gif") no-repeat;
+  background-size: cover;
+}
+.pokedexRoto {
+  /* text-align: center; */
+  display: flex;
+  align-content: center;
+  width:200px;
+  height:200px;
+  background: url(./pok.gif) no-repeat;
+  background-size: contain;
 }

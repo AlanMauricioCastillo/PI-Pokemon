@@ -11,9 +11,7 @@
     align-items: flex-start;
 }
 
-.form-container button {
-    margin-left: 20px;
-}
+
 .label {
     padding-right: 10px;
 }
@@ -45,3 +43,22 @@
   flex-wrap: wrap;
   justify-content: center;
 }
+
+.pagination {
+  display: inline-block;
+}
+
+.but {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  border-radius: transparent;
+}
+
+.but.active {
+  background-color: #3f2514;
+  color: white;
+}
+
+.but:hover:not(.active) {background-color: #ddd;}

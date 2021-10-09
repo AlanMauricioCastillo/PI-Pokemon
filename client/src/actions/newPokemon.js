@@ -9,8 +9,9 @@ import { CALL } from "../Variables"; /* CALL = {
 }; */
 
 export function newPokemon(payload) {
-  return {
-    type: ADD,
-    payload
+  console.log(payload)
+  return async function (dispatch) {
+    await axios.post(CALL.NEW, payload)
+    dispatch({ type: ADD, payload:payload });
   };
 }

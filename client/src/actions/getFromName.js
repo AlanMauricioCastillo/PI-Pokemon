@@ -10,7 +10,7 @@ import { CALL } from "../Variables"; /* CALL = {
 
 export function getFromName(name) {
   return async function (dispatch) {
-    const call = await axios(CALL.BY_NAME + name)
+    const call = await axios.get(CALL.BY_NAME + name)
     console.log(call)
         dispatch({ type: GET_BY_NAME, payload: call.data });
   };

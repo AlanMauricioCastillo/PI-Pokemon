@@ -10,8 +10,8 @@ import { CALL } from "../Variables"; /* CALL = {
 
 export function getPaged(page) {
   return async function (dispatch) {
-    const call = await axios(CALL.PAGES + page)
-    console.log(call)
+    console.log(page)
+    const call = await axios.get(CALL.PAGES + page)
         dispatch({ type: PAGES, payload: call.data });
   };
 }

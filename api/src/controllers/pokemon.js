@@ -93,7 +93,7 @@ const getFromId = async (req, res, next) => {
       const obj = {
         nombre: result2.data.name,
         id: result2.data.id,
-        imagen: result2.data.sprites.front_default,
+        imagen: result2.data.sprites.other["official-artwork"].front_default,
         fuerza: result2.data.stats[1].base_stat,
         defensa: result2.data.stats[2].base_stat,
         altura: result2.data.height,
@@ -136,7 +136,7 @@ const getFromName = async (req, res, next) => {
       const obj = {
         nombre: result2.data.name,
         id: result2.data.id,
-        imagen: result2.data.sprites.front_default,
+        imagen: result2.data.sprites.other["official-artwork"].front_default,
         fuerza: result2.data.stats[1].base_stat,
         defensa: result2.data.stats[2].base_stat,
         altura: result2.data.height,
@@ -165,6 +165,7 @@ const newPokemon = async (req, res, next) => {
     Peso,
     Tipo,
   } = req.body;
+
   try {
     if (!(await Pokemon.findOne({ where: { Nombre: Nombre } }))) {
       const [result, status] = await Pokemon.findOrCreate({
@@ -224,7 +225,9 @@ const getPaged = async (req, res, next) => {
           pages.push({
             id: pokemon.id,
             name: pokemon.name,
+            types: pokemon.types.map((e) => e.type.name),
             imagen: pokemon.sprites.other["official-artwork"].front_default,
+            fuerza: pokemon.stats[1].base_stat,
           });
         });
       });
@@ -233,6 +236,7 @@ const getPaged = async (req, res, next) => {
       if (page < 1 || page > 93) {
         return res.status(404).send("Ingrese un numero valido entre 1 y 93");
       } else {
+        
         if (page <= 75) {
           for (let i = page * 12 - 12; i < page * 12; i++) {
             let sum = i + 1;
@@ -250,7 +254,9 @@ const getPaged = async (req, res, next) => {
             pages.push({
               id: pokemon.id,
               name: pokemon.name,
+              types: pokemon.types.map((e) => e.type.name),
               imagen: pokemon.sprites.other["official-artwork"].front_default,
+              fuerza: pokemon.stats[1].base_stat,
             });
           });
         });

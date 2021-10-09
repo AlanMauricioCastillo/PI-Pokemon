@@ -9,7 +9,7 @@ export default function FirsContact() {
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getThemAll())
-  }, [])
+  }, [dispatch])
   return (
     <div className="bodys">
     <NavLink exact to="/pokemon" >

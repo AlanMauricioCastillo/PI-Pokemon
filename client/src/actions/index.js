@@ -6,7 +6,13 @@ export const GET_THEM_ALL = "GET_THEM_ALL",
   PAGES = "PAGES",
   ORDER_ASC = "ORDER_ASC",
   ORDER_DES = "ORDER_DES",
-  ADD = "ADD";
+  CLEAR = "CLEAR",
+  ADD = "ADD",
+  FORCE_ASC = "FORCE_ASC",
+  FORCE_DES = "FORCE_DES",
+  TYPE_FILTER = "TYPE_FILTER",
+  PROPIOS = "PROPIOS",
+  FROM_API = "FROM_API";
 /* 
 export function getThemAll(title) {
   return function (dispatch) {

@@ -5,6 +5,12 @@ import {
   GET_TYPES,
   ORDER_ASC,
   ORDER_DES,
+  FORCE_ASC,
+  FORCE_DES,
+  TYPE_FILTER,
+  PROPIOS,
+  FROM_API,
+  CLEAR,
   PAGES,
   ADD,
 } from "../actions/index";
@@ -13,7 +19,10 @@ const initialState = {
   pokemons: [],
   pokemonsDetails: {},
   pokemonsTypes: [],
-	pokemonsFilter: [],
+  pokemonsFilter: [],
+  pokemonsPropios: [],
+  pokemonsApi: [],
+  pokemonsOnscreen: [],
 };
 
 export default function rootReducer(state = initialState, action) {
@@ -24,39 +33,69 @@ export default function rootReducer(state = initialState, action) {
         pokemons: action.payload,
       };
     case GET_BY_ID:
-        return {
-          ...state,
-          pokemonsDetails: action.payload,
-        };
+      return {
+        ...state,
+        pokemonsDetails: action.payload,
+      };
     case GET_BY_NAME:
-        return {
-          ...state,
-          pokemonsDetails: action.payload,
-        };
+      return {
+        ...state,
+        pokemonsDetails: action.payload,
+      };
     case GET_TYPES:
       return {
         ...state,
-        pokemons: state.pokemonsTypes.filter((movie) => movie.id !== action.payload),
+        pokemonsTypes: action.payload,
       };
-      case ORDER_ASC:
+    case ORDER_ASC:
+      return {
+        ...state,
+        pokemons: action.payload,
+      };
+    case ORDER_DES:
       return {
         ...state,
         pokemons: state.pokemons.filter((movie) => movie.id !== action.payload),
       };
-      case ORDER_DES:
+    case FORCE_ASC:
       return {
         ...state,
         pokemons: state.pokemons.filter((movie) => movie.id !== action.payload),
+      };
+    case FORCE_DES:
+      return {
+        ...state,
+        pokemons: state.pokemons.filter((movie) => movie.id !== action.payload),
+      };
+    case PROPIOS:
+      return {
+        ...state,
+        pokemons: state.pokemons.filter((movie) => movie.id !== action.payload),
+      };
+    case FROM_API:
+      return {
+        ...state,
+        pokemons: state.pokemons.filter((movie) => movie.id !== action.payload),
+      };
+    case TYPE_FILTER:
+      return {
+        ...state,
+        pokemons: state.pokemons.filter((movie) => movie.id !== action.payload),
+      };
+    case CLEAR:
+      return {
+        ...state,
+        pokemonsDetails: action.payload,
       };
     case PAGES:
       return {
         ...state,
-        pokemons: state.pokemons.filter((movie) => movie.id !== action.payload),
+        pokemons: action.payload,
       };
     case ADD:
       return {
         ...state,
-        pokemonsDetails: action.payload,
+        pokemonsPropios: [...state.pokemonsPropios, action.payload],
       };
     default:
       return state;
