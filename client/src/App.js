@@ -3,6 +3,7 @@ import { Switch } from "react-router";
 import {useDispatch} from "react-redux"
 import { useEffect } from "react";
 import {getTypes} from "./actions/getTypes"
+import { getOwn } from "./actions/getOwn"
 import NavBar from "./components/NavBar/NavBar";
 import Buscador from "./components/Buscador/Buscador";
 //import Paginado from "./components/Paginado/Paginado";
@@ -16,6 +17,7 @@ import './App.css';
 function App() {
   const dispatch = useDispatch()
   useEffect(() => {
+    dispatch(getOwn())
     dispatch(getTypes())
   }, )
   return (

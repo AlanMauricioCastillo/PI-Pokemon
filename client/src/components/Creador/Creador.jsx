@@ -79,6 +79,7 @@ export default function Creador() {
   };
 
   const call = () => {
+    console.log(input)
     dispatch(newPokemon(input));
     dispatch(getThemAll());
   };

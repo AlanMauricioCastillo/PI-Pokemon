@@ -48,16 +48,15 @@ const getThemAll = async (req, res, next) => {
     pokemonApi.forEach((element) => {
       arrOfPromeses.push(axios.get(element.url));
     });
-    await Promise.all(arrOfPromeses).then((e) => {
-      e.forEach((result) => {
-        let pokemon = result.data;
-        array.push({
-          id: pokemon.id,
-          name: pokemon.name,
-          types: pokemon.types.map((e) => e.type.name),
-          imagen: pokemon.sprites.other["official-artwork"].front_default,
-          fuerza: pokemon.stats[1].base_stat,
-        });
+    let e = await Promise.all(arrOfPromeses);
+    e.forEach((result) => {
+      let pokemon = result.data;
+      array.push({
+        id: pokemon.id,
+        name: pokemon.name,
+        types: pokemon.types.map((e) => e.type.name),
+        imagen: pokemon.sprites.other["official-artwork"].front_default,
+        fuerza: pokemon.stats[1].base_stat,
       });
     });
     res.json({ pokemons: array });
@@ -165,7 +164,6 @@ const newPokemon = async (req, res, next) => {
     Peso,
     Tipo,
   } = req.body;
-
   try {
     if (!(await Pokemon.findOne({ where: { Nombre: Nombre } }))) {
       const [result, status] = await Pokemon.findOrCreate({
@@ -178,7 +176,7 @@ const newPokemon = async (req, res, next) => {
           Imagen,
           Altura,
           Peso,
-        },
+        }
       });
       let arr = [];
       Tipo.forEach(async (e) => {
@@ -186,16 +184,21 @@ const newPokemon = async (req, res, next) => {
         !!value && !!result && result.addType(value);
         arr.push(value.dataValues.Nombre);
       });
+      console.log(result,'resultttttttttttttttt')
       const valueAlt = await Pokemon.findByPk(result.dataValues.id);
-      const data = {
-        id: valueAlt.id,
-        name: valueAlt.Nombre,
-        types: arr.map((tipo) => tipo),
-        imagen: valueAlt.Imagen,
-        fuerza: valueAlt.Fuerza,
-      };
-      if (status) res.json(data);
-      else res.sendStatus(500);
+      if (!!arr.length && valueAlt) {
+        const data = {
+          id: valueAlt.id,
+          name: valueAlt.Nombre,
+          types: arr.map((tipo) => tipo),
+          imagen: valueAlt.Imagen,
+          fuerza: valueAlt.Fuerza,
+        };
+        if (status && !!arr.length) {
+          console.log(data,'dataaaaaaaa')
+          res.json(data);
+        } else res.sendStatus(500);
+      }
     } else res.sendStatus(500);
   } catch (err) {
     next(err);
@@ -207,103 +210,90 @@ const getPaged = async (req, res, next) => {
   let pages = [];
   let pokemonsOnPages = [];
   try {
-      if (page < "1" || page > "93") {
-        return res.status(404).send("Ingrese un numero valido entre 1 y 93");
-      } else {
-        if (page <= "75") {
-          for (let i = page * 12 - 12; i < page * 12; i++) {
-            let sum = i + 1;
-            pokemonsOnPages.push(axios.get(URL.POKEMON_ID + sum));
-          }
-        } else {
-          for (let i = page * 12 - 12; i < page * 12; i++) {
-            let sum = i + 9101;
-            pokemonsOnPages.push(axios.get(URL.POKEMON_ID + sum));
-          }
+    let count = await Pokemon.count();
+    if (page < "1" || page > "93") {
+      return res.status(404).send("Ingrese un numero valido entre 1 y 93");
+    } else {
+      if (page <= "75") {
+        for (let i = page * 12 - 12; i < page * 12; i++) {
+          let sum = i + 1 - count - 3;
+          pokemonsOnPages.push(axios.get(URL.POKEMON_ID + sum));
         }
-        let e = await Promise.all(pokemonsOnPages)
-        e.forEach((result) => {
-          let pokemon = result.data;
-          pages.push({
-            id: pokemon.id,
-            name: pokemon.name,
-            types: pokemon.types.map((e) => e.type.name),
-            imagen: pokemon.sprites.other["official-artwork"].front_default,
-            fuerza: pokemon.stats[1].base_stat,
-          });
-        });
-        return res.json({ pokemons: pages });
+      } else {
+        for (let i = page * 12 - 12; i < page * 12; i++) {
+          let sum = i + 9101;
+          pokemonsOnPages.push(axios.get(URL.POKEMON_ID + sum));
+        }
       }
-    } catch (err) {
+      let e = await Promise.all(pokemonsOnPages);
+      e.forEach((result) => {
+        let pokemon = result.data;
+        pages.push({
+          id: pokemon.id,
+          name: pokemon.name,
+          types: pokemon.types.map((e) => e.type.name),
+          imagen: pokemon.sprites.other["official-artwork"].front_default,
+          fuerza: pokemon.stats[1].base_stat,
+        });
+      });
+      return res.json({ pokemons: pages });
+    }
+  } catch (err) {
     next(err);
   }
 };
 
 const getCreated = async (req, res, next) => {
   try {
-    const pDb = await Pokemon.findAll();
+    const pDb = await Pokemon.findAll({
+      model: Pokemon,
+      include: Type,
+    });
+
     if (pDb) {
-      pDb.forEach(async (e) => {
-        let arr = [];
-        const values = await PokemonType.findAll({
-          where: { PokemonId: e.id },
-        });
-        values.forEach((e) => {
-          arr.push(e.TypeNombre);
-        });
-        array.push({
-          id: e.id,
-          name: e.Nombre,
-          types: arr.map((tipo) => tipo),
-          imagen: e.Imagen,
-          fuerza: e.Fuerza,
-        });
-      });
-      res.json({ pokemons: array });
-      array = [];
+      res.json({ pokemons: pDb });
     }
-  } catch (error) {
-    console.log(error);
-    res.status(404).send("El id de pokemon ingresado no existe");
+  } catch (err) {
+    next(err);
   }
 };
 
 const getFromAlienOwner = async (req, res, next) => {
   const { page } = req.params;
-  console.log(page)
+  console.log(page);
   let pages = [];
   let pokemonsOnPages = [];
   try {
     if (page < "1" || page > "4") {
       return res.status(404).send("Ingrese un numero valido entre 1 y 4");
-    } 
+    }
     if (page === "4") {
       for (let i = 37; i < 41; i++) {
         pokemonsOnPages.push(axios.get(URL.POKEMON_ID + i));
       }
     } else {
-        for (let i = page * 12 - 12; i < page * 12; i++) {
-          let sum = i + 1;
-          pokemonsOnPages.push(axios.get(URL.POKEMON_ID + sum));
+      for (let i = page * 12 - 12; i < page * 12; i++) {
+        let sum = i + 1;
+        pokemonsOnPages.push(axios.get(URL.POKEMON_ID + sum));
       }
     }
-      let e = await Promise.all(pokemonsOnPages)
-        e.forEach((result) => {
-          let pokemon = result.data;
-          pages.push({
-            id: pokemon.id,
-            name: pokemon.name,
-            types: pokemon.types.map((e) => e.type.name),
-            imagen: pokemon.sprites.other["official-artwork"].front_default,
-            fuerza: pokemon.stats[1].base_stat,
-          });
-        });
-      return res.json({ pokemons: pages });
-    console.log(pokemonsOnPages)
+    let e = await Promise.all(pokemonsOnPages);
+    e.forEach((result) => {
+      let pokemon = result.data;
+      pages.push({
+        id: pokemon.id,
+        name: pokemon.name,
+        types: pokemon.types.map((e) => e.type.name),
+        imagen: pokemon.sprites.other["official-artwork"].front_default,
+        fuerza: pokemon.stats[1].base_stat,
+      });
+    });
+    return res.json({ pokemons: pages });
+    console.log(pokemonsOnPages);
   } catch (err) {
     next(err);
   }
-}
+};
 
 module.exports = {
   getThemAll,

@@ -13,7 +13,7 @@ import {
   FROM_API,
   CLEAR,
   PAGES,
-  //ADD,
+  ADD,
 } from "../actions/index";
 
 const initialState = {
@@ -49,9 +49,11 @@ export default function rootReducer(state = initialState, action) {
         pokemonsTypes: action.payload,
       };
       case GET_OWN:
+        console.log(action.payload,'getown')
+        //action.payload.length > 0 && [action.payload],
       return {
         ...state,
-        pokemons: action.payload,
+        pokemonsPropios: action.payload.length > 0 && [action.payload],
       };
     case ORDER_ASC:
       return {
@@ -98,12 +100,17 @@ export default function rootReducer(state = initialState, action) {
         ...state,
         pokemons: action.payload,
       };
-    /* case ADD:
+    case ADD:
+      console.log(action.payload,'newpokeagg')
+     /*  state.pokemonsPropios.length > 0 
+        ? [...state.pokemonsPropios, action.payload] 
+        : [action.payload], */
       return {
         ...state,
-        pokemonsPropios: [...state.pokemonsPropios.filter((pokemon) => pokemon.id !== action.payload)],
-        
-      }; */
+        pokemonsPropios: state.pokemonsPropios.length > 0 
+        ? [...state.pokemonsPropios, action.payload] 
+        : [action.payload],
+      };
       default:
         return state;
       }

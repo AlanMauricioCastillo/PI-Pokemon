@@ -6,8 +6,6 @@ import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { orderAsc } from "../../actions/orderAsc";
 import { filterApi } from "../../actions/filterApi";
-import { getOwn } from "../../actions/getOwn";
-import { filterPropios } from "../../actions/filterPropios";
 import { orderDes } from "../../actions/orderDes";
 import { forceAsc } from "../../actions/forceAsc";
 import { forceDes } from "../../actions/forceDes";
@@ -21,9 +19,10 @@ export default function Main() {
   const [hide, setHide] = React.useState('all')
   const [paged, setPaged] = React.useState("");
   const [pagedApi, setPagedApi] = React.useState("");
-  const [update, setUpdate] = React.useState('')
+  const [update, setUpdate] = React.useState("")
   const [pag, setpag] = React.useState(1);
   const [pokemonsOnscreen, setpokemonsOnscreen] = React.useState([]);
+  const [own, setOwn] = React.useState("")
   const [input, setInput] = React.useState({
     alfabetico: "",
     fuerza: "",
@@ -33,9 +32,10 @@ export default function Main() {
 
   var tiposGState = useSelector((state) => state.pokemonsTypes);
   var Pokemons = useSelector((state) => state.pokemons);
-  console.log(paged)
+  var pokemonsPropios = useSelector((state) => state.pokemonsPropios);
+  //console.log(paged)
   
-  //console.log(ownPokemons,'Pokemons')
+  console.log(pokemonsPropios,'pokemonsPropios')
   //console.log(pokemonsOnscreen,'pokemonsOnscreen')
 
   useEffect(() => {
@@ -73,6 +73,7 @@ export default function Main() {
   useEffect(() => {
     if(paged !== "") {
       dispatch(getPaged(paged))
+      setPaged("")
     }
 
   },[dispatch, paged])
@@ -80,9 +81,17 @@ export default function Main() {
   useEffect(() => {
     if(pagedApi !== "") {
       dispatch(filterApi(pagedApi))
+      setPagedApi("")
     }
 
 },[dispatch, pagedApi])
+
+useEffect(() => {
+  if(own !== "") {
+    setpokemonsOnscreen(pokemonsPropios)
+    setOwn("")
+  }
+},[own, pokemonsPropios])
   
   let paginamax = 90
   const hendlestate = (e) => {
@@ -96,8 +105,7 @@ export default function Main() {
       setUpdate("back to basic")
       setHide("all")
       setpag(1)
-      /* setpokemonsOnscreen([])
-      setUpdate("1"); */
+      setPaged("")
     }
   }
 
@@ -128,7 +136,7 @@ const hendleChangeTipos = (e) => {
 
 const HendleChangeOnFilters = (e) => {
   /* if() */
-  console.log(e)
+  //console.log(e)
   const comand = e.target.value
   if(comand === "A-Z") {
     let aux = Pokemons
@@ -189,8 +197,11 @@ if(comand === "Mayor") {
   }))
 } 
 if(comand === "Creados") {
-      dispatch(getOwn())
-  } 
+      setOwn("call")
+  } else {
+    setOwn("")
+    setUpdate("back to basic")
+  }
     if(comand === "Preexistentes") {
       setHide("api")
       //setPagedApi(1)
@@ -211,7 +222,7 @@ if(comand === "Creados") {
 
 } */
 };
-console.log(input,'input')
+//console.log(input,'input')
   return (
     <div>
     <form onChange={e => {
@@ -293,7 +304,7 @@ console.log(input,'input')
       <div id="pagination" className="pagination" >
         <form 
           onClick={(e) => {
-            console.log(e)
+            //console.log(e)
             e.preventDefault();
             //console.log(e.target.name)
             if(e.target.name !== "back" && e.target.name !== "next") {
