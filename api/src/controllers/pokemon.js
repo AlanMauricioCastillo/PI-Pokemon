@@ -207,37 +207,10 @@ const getPaged = async (req, res, next) => {
   let pages = [];
   let pokemonsOnPages = [];
   try {
-    let count = await Pokemon.count();
-    if (page < 1) {
-      if (count > 3) {
-        for (let i = 6; i < 41; i++) {
-          pokemonsOnPages.push(axios.get(URL.POKEMON_ID + i));
-        }
-      } else {
-        let size = 9 - count;
-        for (let i = size + 1; i < 41; i++) {
-          pokemonsOnPages.push(axios.get(URL.POKEMON_ID + i));
-        }
-      }
-      await Promise.all(pokemonsOnPages).then((e) => {
-        e.forEach((result) => {
-          let pokemon = result.data;
-          pages.push({
-            id: pokemon.id,
-            name: pokemon.name,
-            types: pokemon.types.map((e) => e.type.name),
-            imagen: pokemon.sprites.other["official-artwork"].front_default,
-            fuerza: pokemon.stats[1].base_stat,
-          });
-        });
-      });
-      return res.json({ pokemons: pages });
-    } else {
-      if (page < 1 || page > 93) {
+      if (page < "1" || page > "93") {
         return res.status(404).send("Ingrese un numero valido entre 1 y 93");
       } else {
-        
-        if (page <= 75) {
+        if (page <= "75") {
           for (let i = page * 12 - 12; i < page * 12; i++) {
             let sum = i + 1;
             pokemonsOnPages.push(axios.get(URL.POKEMON_ID + sum));
@@ -248,25 +221,89 @@ const getPaged = async (req, res, next) => {
             pokemonsOnPages.push(axios.get(URL.POKEMON_ID + sum));
           }
         }
-        await Promise.all(pokemonsOnPages).then((e) => {
-          e.forEach((result) => {
-            let pokemon = result.data;
-            pages.push({
-              id: pokemon.id,
-              name: pokemon.name,
-              types: pokemon.types.map((e) => e.type.name),
-              imagen: pokemon.sprites.other["official-artwork"].front_default,
-              fuerza: pokemon.stats[1].base_stat,
-            });
+        let e = await Promise.all(pokemonsOnPages)
+        e.forEach((result) => {
+          let pokemon = result.data;
+          pages.push({
+            id: pokemon.id,
+            name: pokemon.name,
+            types: pokemon.types.map((e) => e.type.name),
+            imagen: pokemon.sprites.other["official-artwork"].front_default,
+            fuerza: pokemon.stats[1].base_stat,
           });
         });
         return res.json({ pokemons: pages });
       }
-    }
-  } catch (err) {
+    } catch (err) {
     next(err);
   }
 };
+
+const getCreated = async (req, res, next) => {
+  try {
+    const pDb = await Pokemon.findAll();
+    if (pDb) {
+      pDb.forEach(async (e) => {
+        let arr = [];
+        const values = await PokemonType.findAll({
+          where: { PokemonId: e.id },
+        });
+        values.forEach((e) => {
+          arr.push(e.TypeNombre);
+        });
+        array.push({
+          id: e.id,
+          name: e.Nombre,
+          types: arr.map((tipo) => tipo),
+          imagen: e.Imagen,
+          fuerza: e.Fuerza,
+        });
+      });
+      res.json({ pokemons: array });
+      array = [];
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(404).send("El id de pokemon ingresado no existe");
+  }
+};
+
+const getFromAlienOwner = async (req, res, next) => {
+  const { page } = req.params;
+  console.log(page)
+  let pages = [];
+  let pokemonsOnPages = [];
+  try {
+    if (page < "1" || page > "4") {
+      return res.status(404).send("Ingrese un numero valido entre 1 y 4");
+    } 
+    if (page === "4") {
+      for (let i = 37; i < 41; i++) {
+        pokemonsOnPages.push(axios.get(URL.POKEMON_ID + i));
+      }
+    } else {
+        for (let i = page * 12 - 12; i < page * 12; i++) {
+          let sum = i + 1;
+          pokemonsOnPages.push(axios.get(URL.POKEMON_ID + sum));
+      }
+    }
+      let e = await Promise.all(pokemonsOnPages)
+        e.forEach((result) => {
+          let pokemon = result.data;
+          pages.push({
+            id: pokemon.id,
+            name: pokemon.name,
+            types: pokemon.types.map((e) => e.type.name),
+            imagen: pokemon.sprites.other["official-artwork"].front_default,
+            fuerza: pokemon.stats[1].base_stat,
+          });
+        });
+      return res.json({ pokemons: pages });
+    console.log(pokemonsOnPages)
+  } catch (err) {
+    next(err);
+  }
+}
 
 module.exports = {
   getThemAll,
@@ -274,4 +311,6 @@ module.exports = {
   getFromId,
   getFromName,
   getPaged,
+  getCreated,
+  getFromAlienOwner,
 };

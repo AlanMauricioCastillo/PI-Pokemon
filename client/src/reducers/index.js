@@ -3,16 +3,17 @@ import {
   GET_BY_NAME,
   GET_BY_ID,
   GET_TYPES,
+  GET_OWN,
   ORDER_ASC,
   ORDER_DES,
   FORCE_ASC,
   FORCE_DES,
   TYPE_FILTER,
-  PROPIOS,
+  //SHOW_OWN,
   FROM_API,
   CLEAR,
   PAGES,
-  ADD,
+  //ADD,
 } from "../actions/index";
 
 const initialState = {
@@ -47,6 +48,11 @@ export default function rootReducer(state = initialState, action) {
         ...state,
         pokemonsTypes: action.payload,
       };
+      case GET_OWN:
+      return {
+        ...state,
+        pokemons: action.payload,
+      };
     case ORDER_ASC:
       return {
         ...state,
@@ -55,27 +61,27 @@ export default function rootReducer(state = initialState, action) {
     case ORDER_DES:
       return {
         ...state,
-        pokemons: state.pokemons.filter((movie) => movie.id !== action.payload),
+        pokemons: action.payload,
       };
     case FORCE_ASC:
       return {
         ...state,
-        pokemons: state.pokemons.filter((movie) => movie.id !== action.payload),
+        pokemons: action.payload,
       };
     case FORCE_DES:
       return {
         ...state,
-        pokemons: state.pokemons.filter((movie) => movie.id !== action.payload),
+        pokemons: action.payload,
       };
-    case PROPIOS:
+    /* case SHOW_OWN:
       return {
         ...state,
-        pokemons: state.pokemons.filter((movie) => movie.id !== action.payload),
-      };
+        pokemons: [...state.pokemonsPropios],
+      }; */
     case FROM_API:
       return {
         ...state,
-        pokemons: state.pokemons.filter((movie) => movie.id !== action.payload),
+        pokemons: action.payload,
       };
     case TYPE_FILTER:
       return {
@@ -92,12 +98,15 @@ export default function rootReducer(state = initialState, action) {
         ...state,
         pokemons: action.payload,
       };
-    case ADD:
+    /* case ADD:
       return {
         ...state,
-        pokemonsPropios: [...state.pokemonsPropios, action.payload],
-      };
-    default:
-      return state;
-  }
-}
+        pokemonsPropios: [...state.pokemonsPropios.filter((pokemon) => pokemon.id !== action.payload)],
+        
+      }; */
+      default:
+        return state;
+      }
+    }
+    console.log(initialState.pokemonsPropios)
+

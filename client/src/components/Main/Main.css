@@ -62,3 +62,19 @@
 }
 
 .but:hover:not(.active) {background-color: #ddd;}
+
+
+
+.list-item {
+  margin: 0;
+  display: flex;
+  height: 100%;
+  width: auto;
+  align-items: center;
+}
+
+
+
+#main {
+  border-color: red;
+}

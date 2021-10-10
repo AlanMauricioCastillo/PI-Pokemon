@@ -1,16 +1,15 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import Logo from "./pokemon.png";
-import { useSelector } from "react-redux";
+/* import { useSelector } from "react-redux";
 import { getThemAll } from "../../actions/getThemAll";
 
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch } from "react-redux"; */
 import "./Navbar.css";
 
 
 export default function NavBar() {
-  const dispatch = useDispatch();
   return (
     <header className="navbar">
       <div>

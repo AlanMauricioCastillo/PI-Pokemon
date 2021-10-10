@@ -9,7 +9,6 @@ import "./Creador.css";
 
 export default function Creador() {
   const dispatch = useDispatch()
-  const dispatch1 = useDispatch()
   /* useEffect(() => {
     dispatch(getThemAll())
   }, [dispatch]) */
@@ -81,7 +80,7 @@ export default function Creador() {
 
   const call = () => {
     dispatch(newPokemon(input));
-    dispatch1(getThemAll());
+    dispatch(getThemAll());
   };
 
   const {
@@ -220,7 +219,7 @@ export default function Creador() {
               onSubmit={(e) => {
                 e.preventDefault();
                 call();
-                dispatch1(getThemAll());
+                dispatch(getThemAll());
                 alert("¡Well done Pokemon created!");
               }}
             >

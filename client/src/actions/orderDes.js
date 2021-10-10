@@ -1,8 +1,9 @@
 import { ORDER_DES } from "./index";
 
-export function orderAsc() {
-  return {
-    type: ORDER_DES,
-    payload: null
+
+export function orderDes(payload) {
+  return function (dispatch) {
+    console.log(payload)
+    dispatch({ type: ORDER_DES, payload: payload });
   };
 }

@@ -1,8 +1,8 @@
-import { PROPIOS } from "./index";
+import { SHOW_OWN } from "./index";
 
-export function filterPropios(payload) {
-  return {
-    type: PROPIOS,
-    payload: payload
+export function filterPropios() {
+  return function (dispatch) {
+    console.log('hola')
+    dispatch({ type: SHOW_OWN, payload: null});
   };
 }
