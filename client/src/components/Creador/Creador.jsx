@@ -3,16 +3,16 @@ import Validador from "./Validador.js";
 import { useSelector } from "react-redux";
 import { newPokemon } from "../../actions/newPokemon";
 import { getThemAll } from "../../actions/getThemAll";
-/* import { useEffect } from "react"; */
+import { useEffect } from "react";
 import {useDispatch} from "react-redux" 
 import "./Creador.css";
 
 export default function Creador() {
   const dispatch = useDispatch()
-  /* useEffect(() => {
-    dispatch(getThemAll())
-  }, [dispatch]) */
   var tipos = useSelector((state) => state.pokemonsTypes);
+  var creations = useSelector((state) => state.pokemonsPropios);
+  const [call, setCall] = React.useState("")
+  const [render, setRender] = React.useState("")
   const [input, setInput] = React.useState({
     Nombre: "",
     Vida: "",
@@ -78,11 +78,53 @@ export default function Creador() {
     setErrors(objError);
   };
 
-  const call = () => {
-    console.log(input)
-    dispatch(newPokemon(input));
+  const hendleRefresh = (e) => {
+    console.log(e)
+    setPrevew((prev) => ({
+      ...prev,
+      type: [],
+    }));
+  }
+
+  useEffect(() => {
+    const i = creations.find(
+      (e) => e.name === input.Nombre
+    );
+    if (!i) {
+      if(call !== "") {
+        dispatch(newPokemon(input));
+      }
+      } else {
+        alert("the Pokemon all ready")
+      }
     dispatch(getThemAll());
-  };
+    setCall("")
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [call, dispatch]);
+
+  /* 
+  useEffect(() => {
+    if(render === "api") {
+      document.getElementById("pagination")
+      .style.display = "none";
+      document.getElementById("paginationApi")
+      .style.display = "inline-block";
+    } 
+    if(render === "all") {
+      document.getElementById("pagination")
+      .style.display = "inline-block";
+      document.getElementById("paginationApi")
+      .style.display = "none";
+    }
+    if(render === "nones") {
+      document.getElementById("paginationApi")
+      .style.display = "none";
+      document.getElementById("pagination")
+      .style.display = "none";
+    }
+  },[render])
+ */
+  
 
   const {
     Nombre,
@@ -96,11 +138,13 @@ export default function Creador() {
     Tipo,
   } = input;
   const { name, hp, att, def, speed, img, height, weig, type } = prevew;
+  console.log(tipos)
   return (
     <div>
       <h2>Crea a tu Pokemon</h2>
       <form
         onSubmit={(e) => {
+          console.log(e.target)
           e.preventDefault();
           //console.log(e,'prevewwww')
           handlePrevew();
@@ -182,7 +226,8 @@ export default function Creador() {
             value={Peso}
           />
         </p>
-        <p>
+
+        <div>
           <label>Tipo/s:</label>
           <select value={Tipo} onChange={handleInputChangeTypes}>
             <option value="none">Choose</option>
@@ -192,12 +237,21 @@ export default function Creador() {
               );
             })}
           </select>
-        </p>
-        <input type="submit" name="Prevew" value="Prevew" />
+          <button onClick={(e)=>{
+          hendleRefresh(e)
+        }} name="type" >refresh</button>
+          </div>
+        
+        <input onChange={(e) => {
+          console.log(e.target)
+          e.preventDefault();
+          //console.log(e,'prevewwww')
+          handlePrevew();
+        }} id="submitPrevew" type="submit" name="Prevew" value="Prevew" />
       </form>
 
       <hr />
-      <div className="crea-containers">
+      <div id="prevew" className="crea-containers">
         {name ? (
           <div className="movie-detail">
             <div>
@@ -217,19 +271,20 @@ export default function Creador() {
               })}
             </h2>
             <form
-              onSubmit={(e) => {
+              onClick={(e) => {
                 e.preventDefault();
-                call();
-                dispatch(getThemAll());
-                alert("¡Well done Pokemon created!");
+                setCall("make");
               }}
             >
-              <input type="submit" name="Crear" value="Crear" />
+              <input onSubmit={(e) => {
+          console.log(e.target)
+          e.preventDefault();
+          setInput("")
+        }} type="submit" name="Crear" value="Crear" />
             </form>
           </div>
-        ) : (
-          <div className="inProgres" />
-        )}
+        ) : <h1>loading...</h1>
+        }
       </div>
     </div>
   );

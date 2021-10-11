@@ -176,7 +176,7 @@ const newPokemon = async (req, res, next) => {
           Imagen,
           Altura,
           Peso,
-        }
+        },
       });
       let arr = [];
       Tipo.forEach(async (e) => {
@@ -184,7 +184,6 @@ const newPokemon = async (req, res, next) => {
         !!value && !!result && result.addType(value);
         arr.push(value.dataValues.Nombre);
       });
-      console.log(result,'resultttttttttttttttt')
       const valueAlt = await Pokemon.findByPk(result.dataValues.id);
       if (!!arr.length && valueAlt) {
         const data = {
@@ -195,7 +194,6 @@ const newPokemon = async (req, res, next) => {
           fuerza: valueAlt.Fuerza,
         };
         if (status && !!arr.length) {
-          console.log(data,'dataaaaaaaa')
           res.json(data);
         } else res.sendStatus(500);
       }
@@ -289,7 +287,6 @@ const getFromAlienOwner = async (req, res, next) => {
       });
     });
     return res.json({ pokemons: pages });
-    console.log(pokemonsOnPages);
   } catch (err) {
     next(err);
   }

@@ -27,6 +27,7 @@ const initialState = {
 };
 
 export default function rootReducer(state = initialState, action) {
+  console.log(action.payload)
   switch (action.type) {
     case GET_THEM_ALL:
       return {
@@ -48,13 +49,13 @@ export default function rootReducer(state = initialState, action) {
         ...state,
         pokemonsTypes: action.payload,
       };
-      case GET_OWN:
+    /* case GET_OWN:
         console.log(action.payload,'getown')
         //action.payload.length > 0 && [action.payload],
       return {
         ...state,
         pokemonsPropios: action.payload.length > 0 && [action.payload],
-      };
+      }; */
     case ORDER_ASC:
       return {
         ...state,
@@ -88,7 +89,7 @@ export default function rootReducer(state = initialState, action) {
     case TYPE_FILTER:
       return {
         ...state,
-        pokemons: state.pokemons.filter((movie) => movie.id !== action.payload),
+        pokemons: action.payload,
       };
     case CLEAR:
       return {
@@ -101,19 +102,23 @@ export default function rootReducer(state = initialState, action) {
         pokemons: action.payload,
       };
     case ADD:
-      console.log(action.payload,'newpokeagg')
-     /*  state.pokemonsPropios.length > 0 
-        ? [...state.pokemonsPropios, action.payload] 
-        : [action.payload], */
-      return {
-        ...state,
-        pokemonsPropios: state.pokemonsPropios.length > 0 
-        ? [...state.pokemonsPropios, action.payload] 
-        : [action.payload],
+      const i = state.pokemonsPropios.find(
+        (e) => e.name === action.payload.name
+      );
+      if (!i) {
+        alert("¡Well done Pokemon created!")
+        return {
+          ...state,
+          pokemonsPropios: [...state.pokemonsPropios, action.payload],
+        };
+      } else {
+        alert("the Pokemon all ready")
+        return {
+          ...state,
+          pokemonsPropios: [...state.pokemonsPropios],
+        }
       };
-      default:
-        return state;
-      }
-    }
-    console.log(initialState.pokemonsPropios)
-
+    default:
+      return state;
+  }
+}

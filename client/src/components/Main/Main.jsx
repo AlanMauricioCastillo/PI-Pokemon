@@ -5,6 +5,7 @@ import { getPaged } from "../../actions/getPaged";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { orderAsc } from "../../actions/orderAsc";
+import {typeFilter} from "../../actions/typeFilter"
 import { filterApi } from "../../actions/filterApi";
 import { orderDes } from "../../actions/orderDes";
 import { forceAsc } from "../../actions/forceAsc";
@@ -16,13 +17,18 @@ import "./Main.css";
 
 export default function Main() {
   const dispatch = useDispatch()
+  const [serchTipes, setSerchTypes] = React.useState("");
+  const [tiposLState, setTiposLState] = React.useState([]);
+  const [filtrando, setFiltrando] = React.useState("");
+  const [typeFilters, setTypeFilters] = React.useState([]);
   const [hide, setHide] = React.useState('all')
   const [paged, setPaged] = React.useState("");
   const [pagedApi, setPagedApi] = React.useState("");
   const [update, setUpdate] = React.useState("")
   const [pag, setpag] = React.useState(1);
-  const [pokemonsOnscreen, setpokemonsOnscreen] = React.useState([]);
-  const [own, setOwn] = React.useState("")
+  const [pokemonsOnscreen, setpokemonsOnscreen] = React.useState("");
+  //const [own, setOwn] = React.useState("")
+  // eslint-disable-next-line no-unused-vars
   const [input, setInput] = React.useState({
     alfabetico: "",
     fuerza: "",
@@ -32,15 +38,27 @@ export default function Main() {
 
   var tiposGState = useSelector((state) => state.pokemonsTypes);
   var Pokemons = useSelector((state) => state.pokemons);
-  var pokemonsPropios = useSelector((state) => state.pokemonsPropios);
+  //var pokemonsPropios = useSelector((state) => state.pokemonsPropios);
   //console.log(paged)
   
-  console.log(pokemonsPropios,'pokemonsPropios')
+  //console.log(pokemonsPropios,'pokemonsPropios')
   //console.log(pokemonsOnscreen,'pokemonsOnscreen')
+
+  useEffect(() => {
+    setTiposLState(tiposGState)
+  }, [tiposGState])
+  
+
 
   useEffect(() => {
     setpokemonsOnscreen(Pokemons)
   },[Pokemons])
+
+  useEffect(() => {
+    if(serchTipes !== "")
+    dispatch(typeFilter({pokemons: serchTipes}))
+    setSerchTypes("")
+  }, [dispatch, serchTipes])
 
   useEffect(() => {
     if(hide === "api") {
@@ -86,12 +104,14 @@ export default function Main() {
 
 },[dispatch, pagedApi])
 
-useEffect(() => {
+/* useEffect(() => {
   if(own !== "") {
     setpokemonsOnscreen(pokemonsPropios)
     setOwn("")
   }
-},[own, pokemonsPropios])
+},[own, pokemonsPropios]) */
+
+
   
   let paginamax = 90
   const hendlestate = (e) => {
@@ -113,11 +133,14 @@ useEffect(() => {
     if(e.target.value === "none") {
       setInput((prev) => ({...prev, [e.target.name]: ""}));
   } else {
-    setInput((prev) => ({...prev, [e.target.name]: e.target.value}));
+    setInput((prev) => ({
+      ...prev, 
+      [e.target.name]: e.target.value
+    }));
   }
 }
 
-const hendleChangeTipos = (e) => {
+/* const hendleChangeTipos = (e) => {
   if(e.target.value === "none") {
     setInput((prev) => ({
       ...prev,
@@ -131,13 +154,25 @@ const hendleChangeTipos = (e) => {
       tipos: value,
     }));
   }
-}
+} */
+/* 
+tiposGState.map((e, i) => {
+  return (
+    <option
+      key={i}
+      value={`${e.Nombre}`}
+    >{`${e.Nombre}`}</option>
+  );
+}) */
 
 
 const HendleChangeOnFilters = (e) => {
   /* if() */
   //console.log(e)
   const comand = e.target.value
+  if(comand === "none" || comand === "refresh") {
+    setUpdate("back to basic")
+  }
   if(comand === "A-Z") {
     let aux = Pokemons
     aux.pokemons.sort((a, b) => {
@@ -196,12 +231,14 @@ if(comand === "Mayor") {
     fuerza: ""
   }))
 } 
-if(comand === "Creados") {
-      setOwn("call")
-  } else {
-    setOwn("")
-    setUpdate("back to basic")
-  }
+if(e.target.name === "procedencia") {
+  if(comand === "Creados") {
+    //setOwn("call")
+} else if (comand === "Preexistentes") {
+ // setOwn("")
+}
+}
+
     if(comand === "Preexistentes") {
       setHide("api")
       //setPagedApi(1)
@@ -218,22 +255,84 @@ if(comand === "Creados") {
     procedencia: ""
   }))
 } 
-/* if(input.tipos.length > 1) {
-
-} */
+if(e.target.name === "tipos" && comand !== "refresh") {
+  /* if(filtrando.length > 0) {
+    let arre = []
+    for (let i = 0; i < filtrando.length; i++) {
+      for (let f = 0; f < filtrando[i].types.length; f++) {
+        console.log(filtrando[i].types)
+        for (let j = 0; j < typeFilters.length; j++) {
+          if(filtrando[i].types[f].includes(typeFilters[j])) {
+            arre.push(filtrando[i])
+          }
+        }
+      }
+    }
+    console.log(arre)
+    //console.log(typeFilters)
+    //dispatch(typeFilter(serchTipes))
+    setSerchTypes(serchTipes)
+  } */
+  setFiltrando(Pokemons.pokemons)
+  let arr
+  //console.log(typeFilters)
+  //console.log(comand,'comand')
+  if(!typeFilters.includes(comand)) {
+    document.getElementById(comand).style.backgroundColor = "red"
+    //e.target.style.color = "red"
+    setTypeFilters((prev) => ([...prev, comand]));
+  } /*else if(e.target.name === "tipos") {
+  } */ else {
+    //console.log('entro al else')
+    arr =typeFilters.filter(e => e !== comand)
+    //console.log(arr)
+    setTypeFilters(arr)
+    document.getElementById(comand).style.backgroundColor = "white"
+    //e.target.style.color = "black"
+    if(arr.length < 1) {
+      setUpdate("back to basic")
+    }
+  }
+if(comand === "refresh") {
+  tiposLState.forEach(element => {
+    document.getElementById(element.Nombre).style.backgroundColor = "white"
+  });
+  setTypeFilters([])
+  setUpdate("back to basic")
+}
 };
+}
+
+
+const hendleTypeFilter = () => {
+  if(filtrando.length > 0) {
+    let arre = []
+    for (let i = 0; i < filtrando.length; i++) {
+      for (let f = 0; f < filtrando[i].types.length; f++) {
+        console.log(filtrando[i].types)
+        for (let j = 0; j < typeFilters.length; j++) {
+          if(filtrando[i].types[f].includes(typeFilters[j])) {
+            arre.push(filtrando[i])
+          }
+        }
+      }
+    }
+    console.log(arre)
+    //console.log(typeFilters)
+    //dispatch(typeFilter(serchTipes))
+    setSerchTypes(arre)
+  }
+}
+console.log(Pokemons.pokemons)
+
+console.log(pokemonsOnscreen.pokemons)
 //console.log(input,'input')
   return (
     <div>
     <form onChange={e => {
         e.preventDefault();
-        if(e.target.name !== "tipos") {
           hendleChange(e)
           HendleChangeOnFilters(e)
-          //console.log(e)
-        }
-        //console.log(e.target.name)
-        //console.log(e.target.value)
       }}
       >
         <nav>
@@ -242,33 +341,43 @@ if(comand === "Creados") {
               <p>
                 <label>Orden Alfabetico</label>
                 <select name="alfabetico">
-                  <option value="none"></option>
+                  <option className="ini"  value="none">Messy</option>
                   <option>A-Z</option>
                   <option>Z-A</option>
                 </select>
                 <label>Orden por Fuerza</label>
                 <select name="fuerza">
-                  <option value="none"></option>
+                  <option className="ini"  value="none">All</option>
                   <option>Mayor</option>
                   <option>Menor</option>
                 </select>
               </p>
               <p>
                 <label>Filtro por Tipo</label>
-                <select name="tipos" onChange={hendleChangeTipos}>
-                  <option value="none"></option>
-                  {tiposGState.map((e, i) => {
+                <select name="tipos" 
+                //onChange={hendleChangeTipos}
+                //onClick={HendleChangeOnFilters}
+                >
+                  <option className="ini"  value="refresh">All</option>
+                  {
+                    tiposLState.map((e, i) => {
                     return (
                       <option
+                        id={e.Nombre}
                         key={i}
                         value={`${e.Nombre}`}
                       >{`${e.Nombre}`}</option>
                     );
-                  })}
+                  })
+                  }
                 </select>
+                <button onClick={(e) => {
+                  e.preventDefault()
+                  hendleTypeFilter(e)
+                }}>serch</button>
                 <label>Filtro por Procedencia</label>
                 <select name="procedencia">
-                <option value="none"></option>
+                <option className="ini"  value="none">Mix</option>
                   <option>Creados</option>
                   <option>Preexistentes</option>
                 </select>
