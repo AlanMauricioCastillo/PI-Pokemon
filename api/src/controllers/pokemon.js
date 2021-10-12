@@ -111,6 +111,7 @@ const getFromId = async (req, res, next) => {
 
 const getFromName = async (req, res, next) => {
   const { name } = req.query;
+  if(!name) res.send('Reacer el formulario')
   try {
     const result = await Pokemon.findOne({
       where: { Nombre: name },
@@ -153,6 +154,7 @@ const getFromName = async (req, res, next) => {
 };
 
 const newPokemon = async (req, res, next) => {
+  if(!req.body) res.send('Reacer el formulario')
   const {
     Nombre,
     Vida,
@@ -256,7 +258,8 @@ const getCreated = async (req, res, next) => {
   }
 };
 
-const getFromAlienOwner = async (req, res, next) => {
+// 40 pokemons paginados
+/* const getFromAlienOwner = async (req, res, next) => {
   const { page } = req.params;
   console.log(page);
   let pages = [];
@@ -286,6 +289,32 @@ const getFromAlienOwner = async (req, res, next) => {
         fuerza: pokemon.stats[1].base_stat,
       });
     });
+    return res.json({ pokemons: pages });
+  } catch (err) {
+    next(err);
+  }
+}; */
+
+// 40 pokemons todos juntos
+const getFromAlienOwner = async (req, res, next) => {
+  let pokemonsOnPages = [];
+  let pages = [];
+  try {
+    for (let i = 1; i < 41; i++) {
+      pokemonsOnPages.push(axios.get(URL.POKEMON_ID + i));
+    }
+    let e = await Promise.all(pokemonsOnPages);
+    e &&
+      e.forEach((result) => {
+        let pokemon = result.data;
+        pages.push({
+          id: pokemon.id,
+          name: pokemon.name,
+          types: pokemon.types.map((e) => e.type.name),
+          imagen: pokemon.sprites.other["official-artwork"].front_default,
+          fuerza: pokemon.stats[1].base_stat,
+        });
+      });
     return res.json({ pokemons: pages });
   } catch (err) {
     next(err);

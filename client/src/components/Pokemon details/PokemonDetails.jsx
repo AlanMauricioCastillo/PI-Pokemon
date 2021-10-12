@@ -34,13 +34,14 @@ export default function PokemonDetails() {
     {
       pokemon.nombre
         ?
-      <div className="movie-detail">
-          <div>
+        <div className="crea-containers">
+          <div className="title">
             <h1>
               { nombre }
             </h1>
           </div>
             <img src={ imagen } alt={ "im" } className="img" />
+            <div className="cardano">
             <h2>
             Id: { id }
             </h2>
@@ -62,6 +63,8 @@ export default function PokemonDetails() {
             <h2>
             Vida: { vida }
             </h2> 
+            </div>
+            <div className="cardanolo">
             <h2>
             Tipo/s: { 
               tipo.map((e, i) => {
@@ -69,6 +72,7 @@ export default function PokemonDetails() {
               }) 
               }
             </h2> 
+            </div>
         </div>
       :
         <h1>Loading...</h1>

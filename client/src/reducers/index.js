@@ -49,13 +49,13 @@ export default function rootReducer(state = initialState, action) {
         ...state,
         pokemonsTypes: action.payload,
       };
-    /* case GET_OWN:
+    case GET_OWN:
         console.log(action.payload,'getown')
         //action.payload.length > 0 && [action.payload],
       return {
         ...state,
-        pokemonsPropios: action.payload.length > 0 && [action.payload],
-      }; */
+        pokemonsPropios: action.payload,
+      };
     case ORDER_ASC:
       return {
         ...state,
@@ -81,11 +81,22 @@ export default function rootReducer(state = initialState, action) {
         ...state,
         pokemons: [...state.pokemonsPropios],
       }; */
-    case FROM_API:
+
+      //los 40 paginados del back
+    /* case FROM_API:
       return {
         ...state,
         pokemons: action.payload,
+      }; */
+
+      //los 40
+      case FROM_API:
+      return {
+        ...state,
+        pokemonsFilter: action.payload,
       };
+
+
     case TYPE_FILTER:
       return {
         ...state,

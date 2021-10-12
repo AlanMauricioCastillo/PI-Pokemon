@@ -1,14 +1,18 @@
 .cnt {
     padding-top: 10px;
 }
-.form-containers {
+.form-containerses {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   flex-wrap: wrap;
   align-content: center;
 }
 
+.titleBuscador {
+  text-align: center;
+  font-size: 40px;
+}
 
 .label {
     padding-right: 10px;

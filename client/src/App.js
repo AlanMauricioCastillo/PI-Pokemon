@@ -4,9 +4,11 @@ import {useDispatch} from "react-redux"
 import { useEffect } from "react";
 import {getTypes} from "./actions/getTypes"
 import { getOwn } from "./actions/getOwn"
+//import {getThemAll} from "./actions/getThemAll"
 import NavBar from "./components/NavBar/NavBar";
 import Buscador from "./components/Buscador/Buscador";
 //import Paginado from "./components/Paginado/Paginado";
+
 import PokemonDetails from "./components/Pokemon details/PokemonDetails";
 import Main from "./components/Main/Main.jsx"
 import Creador from "./components/Creador/Creador.jsx"
@@ -17,9 +19,13 @@ import './App.css';
 function App() {
   const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(getOwn())
     dispatch(getTypes())
-  }, )
+  },)
+  
+  /* useEffect(() => {
+    dispatch(getOwn())
+  }, []) */
+  
   return (
     <BrowserRouter>
 

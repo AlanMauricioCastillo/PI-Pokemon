@@ -19,7 +19,11 @@ router.post("/", newPokemon);
 
 router.get("/page/:page", getPaged);
 
-router.get("/alien/creations/:page", getFromAlienOwner);
+//40 paginados de ak
+//router.get("/alien/creations/:page", getFromAlienOwner);
+
+//los 40 completos
+router.get("/alien/creations", getFromAlienOwner);
 
 router.get("/own/creations", getCreated);
 

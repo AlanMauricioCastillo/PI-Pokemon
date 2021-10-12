@@ -31,7 +31,8 @@ export default function Buscador() {
   }
 
   return (
-    <div className="form-containers">
+    <div className="form-containerses">
+    <h1 className="titleBuscador" >Buscalos en tu Pokedex</h1>
     <form onSubmit={(e) => {
       e.preventDefault();
       clearDetails()

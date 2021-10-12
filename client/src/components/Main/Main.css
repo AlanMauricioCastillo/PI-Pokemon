@@ -44,7 +44,11 @@
   justify-content: center;
 }
 
-.pagination {
+.pagination button {
+  border: none;
+  background: red;
+  cursor: pointer;
+  padding: 8px 16px;
   display: inline-block;
 }
 
@@ -52,7 +56,6 @@
   color: black;
   float: left;
   padding: 8px 16px;
-  text-decoration: none;
   border-radius: transparent;
 }
 
@@ -77,4 +80,59 @@
 
 #main {
   border-color: red;
+}
+
+
+body {
+  text-align: center;
+  height: 100vh;
+  background-image: url("./poke.png");
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+
+
+.forma {
+  border-radius: 15px;
+  background-color: rgb(230, 101, 54);
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.forma input {
+  width: 90%;
+  height: 30px;
+  margin: 0.5rem;
+}
+
+.forma button {
+  padding: 0.5em 1em;
+  border: none;
+  background: rgb(255, 0, 0);
+  cursor: pointer;
+}
+
+.card {
+  display: inline-block;
+  margin: 8px;
+  max-width: 300px;
+  perspective: 1000;
+  position: relative;
+  text-align: left;
+  transition: all 0.3s 0s ease-in;
+  width: 300px;
+  z-index: 1;
+}
+
+.textBox {
+  text-align: center;
+  border-radius: 10px;
+  width: 120px;
+  background-color: rgb(230, 101, 54);
 }

@@ -4,15 +4,22 @@ import { useSelector } from "react-redux";
 import { newPokemon } from "../../actions/newPokemon";
 import { getThemAll } from "../../actions/getThemAll";
 import { useEffect } from "react";
-import {useDispatch} from "react-redux" 
+import { getOwn } from "../../actions/getOwn";
+import { useDispatch } from "react-redux";
 import "./Creador.css";
 
 export default function Creador() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const [creado, setCreado] = React.useState([]);
+  const [typeFilters, setTypeFilters] = React.useState([]);
+  const [update, setUpdate] = React.useState("");
+  var tiposGState = useSelector((state) => state.pokemonsTypes);
   var tipos = useSelector((state) => state.pokemonsTypes);
   var creations = useSelector((state) => state.pokemonsPropios);
-  const [call, setCall] = React.useState("")
-  const [render, setRender] = React.useState("")
+  const [tiposLState, setTiposLState] = React.useState([]);
+  const [hide, setHide] = React.useState("all");
+  const [call, setCall] = React.useState("");
+  //const [render, setRender] = React.useState("");
   const [input, setInput] = React.useState({
     Nombre: "",
     Vida: "",
@@ -37,10 +44,34 @@ export default function Creador() {
   });
 
   const [errors, setErrors] = React.useState({});
-  //console.log(input)
 
   const handleInputChangeTypes = (e) => {
+    let ar = []
+    let arr = [];
+    console.log(e.target.value);
+    let comand = e.target.value;
+    ar.push(comand)
+    if (!typeFilters.includes(comand)) {
+      document.getElementById(comand).style.backgroundColor = "red";
+      setTypeFilters((prev) => [...prev, comand]);
+    } else {
+      arr = typeFilters.filter((e) => e !== comand);
+      setTypeFilters(arr);
+      document.getElementById(comand).style.backgroundColor = "white";
+      if (arr.length < 1) {
+        setUpdate("back to basic");
+      }
+    }
+    if (comand === "none") {
+      tiposLState.forEach((element) => {
+        document.getElementById(element.Nombre).style.backgroundColor = "white";
+      });
+      setTypeFilters([]);
+      setUpdate("back to basic");
+    }
+
     let value = [...input.Tipo];
+    //console.log(value)
     if (!input.Tipo.includes(e.target.value)) value.push(e.target.value);
     setInput((prev) => ({
       ...prev,
@@ -49,24 +80,31 @@ export default function Creador() {
   };
 
   const handlePrevew = (e) => {
-    let arr = [];
-    if (input.Tipo) {
-      arr = input.Tipo.filter((e, i) => {
-        return input.Tipo.indexOf(e) === i;
-      });
+    if(creado.includes(input.Nombre)) {
+      hendleRefresh()
+      alert('¡el pokemon ya existe!')
+    } else {
+      console.log(e);
+      let arr = [];
+      if (input.Tipo) {
+        arr = input.Tipo.filter((e, i) => {
+          return input.Tipo.indexOf(e) === i;
+        });
+      }
+      console.log(arr)
+      setPrevew((prev) => ({
+        ...prev,
+        name: input.Nombre,
+        hp: input.Vida,
+        att: input.Fuerza,
+        def: input.Defensa,
+        speed: input.Velocidad,
+        img: input.Imagen,
+        height: input.Altura,
+        weig: input.Peso,
+        type: arr,
+      }));
     }
-    setPrevew((prev) => ({
-      ...prev,
-      name: input.Nombre,
-      hp: input.Vida,
-      att: input.Fuerza,
-      def: input.Defensa,
-      speed: input.Velocidad,
-      img: input.Imagen,
-      height: input.Altura,
-      weig: input.Peso,
-      type: arr,
-    }));
   };
 
   const handleInputChange = (e) => {
@@ -79,72 +117,67 @@ export default function Creador() {
   };
 
   const hendleRefresh = (e) => {
-    console.log(e)
-    setPrevew((prev) => ({
-      ...prev,
-      type: [],
-    }));
-  }
+    dispatch(getThemAll())
+    typeFilters.forEach((e) => {
+      document.getElementById(e).style.backgroundColor = "white";
+    })
+    console.log(e);
+    setInput({
+      Nombre: "",
+      Vida: "",
+      Fuerza: "",
+      Defensa: "",
+      Velocidad: "",
+      Imagen: "",
+      Altura: "",
+      Peso: "",
+      Tipo: [],
+      })
+      setPrevew((prev) => ({
+        ...prev,
+        name: "",
+        hp: "",
+        att: "",
+        def: "",
+        speed: "",
+        img: "",
+        height: "",
+        weig: "",
+        type: "",
+      }));
+  };
+
+  //console.log(creations);
+  useEffect(() => {
+    if (creations.pokemons) {
+      dispatch(getThemAll())
+      dispatch(getOwn());
+    }
+    console.log(input)
+    if (call !== "") {
+      dispatch(newPokemon(input));
+      dispatch(getOwn());
+      setCall("");
+      alert("¡Well done Pokemon created!");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [call]);
 
   useEffect(() => {
-    const i = creations.find(
-      (e) => e.name === input.Nombre
-    );
-    if (!i) {
-      if(call !== "") {
-        dispatch(newPokemon(input));
-      }
-      } else {
-        alert("the Pokemon all ready")
-      }
-    dispatch(getThemAll());
-    setCall("")
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [call, dispatch]);
+    setTiposLState(tiposGState);
+  }, [tiposGState]);
 
-  /* 
-  useEffect(() => {
-    if(render === "api") {
-      document.getElementById("pagination")
-      .style.display = "none";
-      document.getElementById("paginationApi")
-      .style.display = "inline-block";
-    } 
-    if(render === "all") {
-      document.getElementById("pagination")
-      .style.display = "inline-block";
-      document.getElementById("paginationApi")
-      .style.display = "none";
-    }
-    if(render === "nones") {
-      document.getElementById("paginationApi")
-      .style.display = "none";
-      document.getElementById("pagination")
-      .style.display = "none";
-    }
-  },[render])
- */
-  
-
-  const {
-    Nombre,
-    Vida,
-    Fuerza,
-    Defensa,
-    Velocidad,
-    Imagen,
-    Altura,
-    Peso,
-    Tipo,
-  } = input;
+  const { Nombre, Vida, Fuerza, Defensa, Velocidad, Imagen, Altura, Peso, Tipo } =
+    input;
   const { name, hp, att, def, speed, img, height, weig, type } = prevew;
-  console.log(tipos)
+  console.log(input.Tipo);
   return (
     <div>
       <h2>Crea a tu Pokemon</h2>
-      <form
+      <form className="form"
+        id="form1"
         onSubmit={(e) => {
-          console.log(e.target)
+          console.log(e.target);
           e.preventDefault();
           //console.log(e,'prevewwww')
           handlePrevew();
@@ -229,63 +262,101 @@ export default function Creador() {
 
         <div>
           <label>Tipo/s:</label>
-          <select value={Tipo} onChange={handleInputChangeTypes}>
+          <select value="Tipo" onChange={handleInputChangeTypes}>
             <option value="none">Choose</option>
             {tipos.map((e, i) => {
               return (
-                <option key={i} value={`${e.Nombre}`}>{`${e.Nombre}`}</option>
+                <option
+                  id={e.Nombre}
+                  key={i}
+                  value={`${e.Nombre}`}
+                >{`${e.Nombre}`}</option>
               );
             })}
           </select>
-          <button onClick={(e)=>{
-          hendleRefresh(e)
-        }} name="type" >refresh</button>
-          </div>
-        
-        <input onChange={(e) => {
-          console.log(e.target)
-          e.preventDefault();
-          //console.log(e,'prevewwww')
-          handlePrevew();
-        }} id="submitPrevew" type="submit" name="Prevew" value="Prevew" />
+          <input
+            type="button"
+            id="refresh"
+            value="refresh"
+            onClick={(e) => {
+              e.preventDefault();
+              hendleRefresh(e);
+            }}
+            name="type"
+          />
+        </div>
+
+        <input
+          onChange={(e) => {
+            console.log(e.target);
+            e.preventDefault();
+            //console.log(e,'prevewwww')
+            handlePrevew();
+          }}
+          id="submitPrevew"
+          type="submit"
+          name="Prevew"
+          value="Prevew"
+        />
       </form>
 
-      <hr />
+      
       <div id="prevew" className="crea-containers">
         {name ? (
-          <div className="movie-detail">
-            <div>
-              <h1>{name}</h1>
-            </div>
+          <div className="crea-containers">
+          <div className="cardano">
+            <h1>{name}</h1>
             <img src={img} alt={"im"} className="img" />
+            </div>
+            <div className="text">
             <h2>Fuerza: {att}</h2>
             <h2>Defensa: {def}</h2>
             <h2>Altura: {height}</h2>
             <h2>Peso: {weig}</h2>
             <h2>Velocidad: {speed}</h2>
             <h2>Vida: {hp}</h2>
+            <div className="cardano">
             <h2>
               Tipo/s:{" "}
-              {type.map((e, i) => {
+              {typeFilters.map((e, i) => {
                 return <div key={i}>{e}</div>;
               })}
             </h2>
+            </div>
             <form
               onClick={(e) => {
+                setCreado((prev)=>[...prev, input.Nombre])
                 e.preventDefault();
                 setCall("make");
               }}
             >
-              <input onSubmit={(e) => {
-          console.log(e.target)
-          e.preventDefault();
-          setInput("")
-        }} type="submit" name="Crear" value="Crear" />
+              <input
+                onSubmit={(e) => {
+                  console.log(e.target);
+                  e.preventDefault();
+                }}
+                //onClick={hendleRefresh}
+                type="submit"
+                name="Crear"
+                value="Crear"
+              />
             </form>
+            </div>
           </div>
-        ) : <h1>loading...</h1>
-        }
+        ) : (
+          <div className="inProgresses" />
+        )}
       </div>
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
