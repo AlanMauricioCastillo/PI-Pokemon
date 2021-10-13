@@ -105,7 +105,7 @@ const getFromId = async (req, res, next) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(404).send("El id de pokemon ingresado no existe");
+    res.status(404).send("El pokemon ingresado no existe");
   }
 };
 
@@ -297,9 +297,9 @@ const getCreated = async (req, res, next) => {
 
 // 40 pokemons todos juntos
 const getFromAlienOwner = async (req, res, next) => {
-  let pokemonsOnPages = [];
-  let pages = [];
   try {
+    let pokemonsOnPages = [];
+    let pages = [];
     for (let i = 1; i < 41; i++) {
       pokemonsOnPages.push(axios.get(URL.POKEMON_ID + i));
     }
@@ -315,7 +315,7 @@ const getFromAlienOwner = async (req, res, next) => {
           fuerza: pokemon.stats[1].base_stat,
         });
       });
-    return res.json({ pokemons: pages });
+    res.json({ pokemons: pages });
   } catch (err) {
     next(err);
   }

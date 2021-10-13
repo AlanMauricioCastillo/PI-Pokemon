@@ -17,6 +17,7 @@
 }
 
 .card {
+  text-transform: capitalize;
   background-color : transparent;
   margin: 20px;
   width: 18rem;
@@ -59,12 +60,12 @@
   border-radius: transparent;
 }
 
-.but.active {
-  background-color: #3f2514;
+.pagination button.active {
+  background-color: rgb(230, 101, 54);
   color: white;
 }
 
-.but:hover:not(.active) {background-color: #ddd;}
+.pagination button:hover:not(.active) {background-color: rgb(230, 101, 54);}
 
 
 
@@ -135,4 +136,8 @@ body {
   border-radius: 10px;
   width: 120px;
   background-color: rgb(230, 101, 54);
+}
+
+.big {
+  padding-top: 60px;
 }

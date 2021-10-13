@@ -21,6 +21,7 @@ export default function FirsContact() {
     if(!PokemonsNoP.pokemons || PokemonsNoP.pokemons.length < 1) {
       dispatch(filterApi())
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[PokemonsNoP])
   
   return (

@@ -29,13 +29,14 @@ export default function PokemonDetails() {
   //const{Title, Poster, Actors, Director, Plot, Rated, Released, Writer, Year} = movie
   const{nombre, id, imagen, fuerza, defensa, altura, peso, velocidad, tipo, vida} = pokemon
   return (
+    <div className="big">
     <div className="pokemon-detail">
     {/* <h1>soy details Pokemon</h1> */}
     {
       pokemon.nombre
         ?
-        <div className="crea-containers">
-          <div className="title">
+        <div className="description">
+          <div className="titledetails">
             <h1>
               { nombre }
             </h1>
@@ -77,6 +78,7 @@ export default function PokemonDetails() {
       :
         <h1>Loading...</h1>
       }
+    </div>
     </div>
   )
 }

@@ -1,17 +1,14 @@
 import { GET_BY_NAME } from "./index";
 import axios from "axios";
-import { CALL } from "../Variables"; /* CALL = {
-  MAIN: BASE + "/pokemons",
-  BY_NAME: BASE + "/pokemons?name=", // + nombre
-  BY_ID: BASE + "/pokemons/", // + id
-  TYPES: BASE + "/Types",
-  PAGES: BASE + "/pokemons/page/",
-}; */
+import { CALL } from "../Variables";
 
 export function getFromName(name) {
   return async function (dispatch) {
-    const call = await axios.get(CALL.BY_NAME + name)
-    console.log(call)
-        dispatch({ type: GET_BY_NAME, payload: call.data });
+    try {
+      const call = await axios.get(CALL.BY_NAME + name);
+      dispatch({ type: GET_BY_NAME, payload: call.data });
+    } catch (e) {
+      alert("¡ese pokemon no existe!");
+    }
   };
 }

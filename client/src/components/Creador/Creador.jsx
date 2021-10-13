@@ -117,10 +117,6 @@ export default function Creador() {
   };
 
   const hendleRefresh = (e) => {
-    dispatch(getThemAll())
-    typeFilters.forEach((e) => {
-      document.getElementById(e).style.backgroundColor = "white";
-    })
     console.log(e);
     setInput({
       Nombre: "",
@@ -145,6 +141,10 @@ export default function Creador() {
         weig: "",
         type: "",
       }));
+      typeFilters.forEach((e) => {
+        document.getElementById(e).style.backgroundColor = "white";
+      })
+      dispatch(getThemAll())
   };
 
   //console.log(creations);
@@ -155,10 +155,12 @@ export default function Creador() {
     }
     console.log(input)
     if (call !== "") {
+      console.log(input)
       dispatch(newPokemon(input));
       dispatch(getOwn());
       setCall("");
-      alert("¡Well done Pokemon created!");
+      //alert("¡Well done Pokemon created!");
+      hendleRefresh()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [call]);
@@ -172,7 +174,7 @@ export default function Creador() {
   const { name, hp, att, def, speed, img, height, weig, type } = prevew;
   console.log(input.Tipo);
   return (
-    <div>
+    <div className="big">
       <h2>Crea a tu Pokemon</h2>
       <form className="form"
         id="form1"
@@ -328,6 +330,7 @@ export default function Creador() {
                 setCreado((prev)=>[...prev, input.Nombre])
                 e.preventDefault();
                 setCall("make");
+                //hendleRefresh()
               }}
             >
               <input

@@ -47,10 +47,14 @@ export default function Main() {
   }, [tiposGState]);
 
   useEffect(() => {
-    
       setpokemonsOnscreen(Pokemons);
-    
   }, [Pokemons]);
+
+  useEffect(() => {
+    if(!Pokemons.pokemons && Pokemons.length < 1) {
+      dispatch(getThemAll());
+    }
+}, [Pokemons]);
 
   useEffect(() => {
     if (serchTipes !== "") dispatch(typeFilter({ pokemons: serchTipes }));
@@ -131,6 +135,7 @@ export default function Main() {
     if (own !== "") {
       //console.log(pokemonsPropios)
       if(pokemonsPropios.length < 1 || pokemonsPropios.pokemons.length < 1) {
+        //dispatch(filterApi());
         alert("¡no thing here!")
       } else {
         let pokemons = [];
@@ -300,6 +305,7 @@ export default function Main() {
         setHide("api");
         setPagedApi(1);
       } else {
+        dispatch(filterApi());
         alert("aun esperando el respond!")
       }
     }
@@ -307,9 +313,13 @@ export default function Main() {
       console.log('entre a creado')
       setOwn("call");
       if(pokemonsPropios.Pokemons !== undefined && pokemonsPropios.pokemons.length > 0) {
-        setHide("nones");
-      } else {
+        
+        console.log('entre a creado if')
         alert("¡no thing here!")
+      } else {
+        console.log('entre a creado else')
+
+        setHide("nones");
       }
     }
     if (comand === "none") {
@@ -357,28 +367,28 @@ export default function Main() {
   const hendleTypeFilter = () => {
     if (filtrando.length > 0) {
       console.log(filtrando)
-      const dataArr = new Set(filtrando);
-      let result = [...dataArr];
       let arre = [];
-      for (let i = 0; i < result.length; i++) {
-        for (let f = 0; f < result[i].types.length; f++) {
-          console.log(result[i].types);
+      for (let i = 0; i < filtrando.length; i++) {
+        for (let f = 0; f < filtrando[i].types.length; f++) {
+          console.log(filtrando[i].types);
           for (let j = 0; j < typeFilters.length; j++) {
-            if (result[i].types[f].includes(typeFilters[j])) {
-              arre.push(result[i]);
+            if (filtrando[i].types[f].includes(typeFilters[j])) {
+              arre.push(filtrando[i]);
             }
           }
         }
       }
       //filtra arre!!!!!!!!!!!!!!!!!!!!!!
+      const dataArr = new Set(arre);
+      let result = [...dataArr];
       console.log(arre);
-      setSerchTypes(arre);
+      setSerchTypes(result);
     }
   };
 
   console.log(pokemonsOnscreen);
   return (
-    <div>
+    <div className="big">
       <form
       className="forma"
         onChange={(e) => {
@@ -548,6 +558,7 @@ export default function Main() {
         <form
           onClick={(e) => {
             e.preventDefault();
+            //HendleChangeOnFilters(e);
             if (e.target.name === "main") {
               hendlestate(e.target.name);
             }

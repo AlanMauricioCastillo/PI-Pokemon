@@ -3,6 +3,7 @@
   margin: 0;
 }
 .bodys {
+  padding-top: -200px;
   text-align: center;
   height: 100vh;
   background: url("./first\ contact.gif") no-repeat;

@@ -1,6 +1,6 @@
 import React from 'react'
 import './NotFound.css'
-import image from './image.jpg'
+import image from './imagens.jpg'
 
 export default function NotFound() {
     return (

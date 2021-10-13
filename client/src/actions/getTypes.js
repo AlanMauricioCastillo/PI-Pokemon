@@ -4,8 +4,12 @@ import { CALL } from "../Variables";
 
 export function getTypes() {
   return async function (dispatch) {
+    try {
     const call = await axios.get(CALL.TYPES)
     //console.log(call)
         dispatch({ type: GET_TYPES, payload: call.data });
+      } catch (e) {
+        alert("¡el llamado de getTypes fallo!");
+      }
   };
 }

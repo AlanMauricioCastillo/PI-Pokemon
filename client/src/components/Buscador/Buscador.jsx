@@ -31,6 +31,7 @@ export default function Buscador() {
   }
 
   return (
+    <div className="big">
     <div className="form-containerses">
     <h1 className="titleBuscador" >Buscalos en tu Pokedex</h1>
     <form onSubmit={(e) => {
@@ -51,7 +52,7 @@ export default function Buscador() {
     {
       details.nombre
         ?
-          <div key={details.id} className="form-containers" >
+          <div key={details.id} className="cardes" >
               <Link to={`/pokemon/${details.id}`} className="link" >
                 <div>
                   <div>
@@ -62,6 +63,7 @@ export default function Buscador() {
                       alt=""
                     />
                   </div>
+                  <div className="textBox">
                   <h5 className="card-title">{details.nombre}</h5>
                     <h6>Tipo/s</h6>
                     {
@@ -69,12 +71,14 @@ export default function Buscador() {
                         return <p key={i}>{t}</p>
                       })
                     }
+                    </div>
                 </div>
               </Link>
             </div>
         :
         <div className="pokedexRoto"/>
       }
+    </div>
     </div>
   );
 }

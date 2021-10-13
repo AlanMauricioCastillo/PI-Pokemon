@@ -1,17 +1,15 @@
 import { PAGES } from "./index";
 import axios from "axios";
-import { CALL } from "../Variables"; /* CALL = {
-  MAIN: BASE + "/pokemons",
-  BY_NAME: BASE + "/pokemons?name=", // + nombre
-  BY_ID: BASE + "/pokemons/", // + id
-  TYPES: BASE + "/Types",
-  PAGES: BASE + "/pokemons/page/",
-}; */
+import { CALL } from "../Variables";
 
 export function getPaged(page) {
   return async function (dispatch) {
+    try {
     console.log(page)
     const call = await axios.get(CALL.PAGES + page)
         dispatch({ type: PAGES, payload: call.data });
+      } catch (e) {
+        console.log("¡el llamado de getPaged fallo!");
+      }
   };
 }
