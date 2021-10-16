@@ -10,6 +10,7 @@
 }
 
 .titleBuscador {
+  text-transform: capitalize;
   text-align: center;
   font-size: 40px;
 }

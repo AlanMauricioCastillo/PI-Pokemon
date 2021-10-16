@@ -29,7 +29,7 @@ export default function Creador() {
     Imagen: "",
     Altura: "",
     Peso: "",
-    Tipo: "",
+    types: "",
   });
   const [prevew, setPrevew] = React.useState({
     name: "",
@@ -46,6 +46,7 @@ export default function Creador() {
   const [errors, setErrors] = React.useState({});
 
   const handleInputChangeTypes = (e) => {
+    setTypeFilters([]);
     let ar = []
     let arr = [];
     console.log(e.target.value);
@@ -70,12 +71,12 @@ export default function Creador() {
       setUpdate("back to basic");
     }
 
-    let value = [...input.Tipo];
+    let value = [...input.types];
     //console.log(value)
-    if (!input.Tipo.includes(e.target.value)) value.push(e.target.value);
+    if (!input.types.includes(e.target.value)) value.push(e.target.value);
     setInput((prev) => ({
       ...prev,
-      Tipo: value,
+      types: value,
     }));
   };
 
@@ -86,9 +87,9 @@ export default function Creador() {
     } else {
       console.log(e);
       let arr = [];
-      if (input.Tipo) {
-        arr = input.Tipo.filter((e, i) => {
-          return input.Tipo.indexOf(e) === i;
+      if (input.types) {
+        arr = input.types.filter((e, i) => {
+          return input.types.indexOf(e) === i;
         });
       }
       console.log(arr)
@@ -127,7 +128,7 @@ export default function Creador() {
       Imagen: "",
       Altura: "",
       Peso: "",
-      Tipo: [],
+      types: [],
       })
       setPrevew((prev) => ({
         ...prev,
@@ -157,10 +158,11 @@ export default function Creador() {
     if (call !== "") {
       console.log(input)
       dispatch(newPokemon(input));
-      dispatch(getOwn());
       setCall("");
       //alert("¡Well done Pokemon created!");
+      dispatch(getOwn());
       hendleRefresh()
+      dispatch(getThemAll())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [call]);
@@ -169,10 +171,11 @@ export default function Creador() {
     setTiposLState(tiposGState);
   }, [tiposGState]);
 
-  const { Nombre, Vida, Fuerza, Defensa, Velocidad, Imagen, Altura, Peso, Tipo } =
+  const { Nombre, Vida, Fuerza, Defensa, Velocidad, Imagen, Altura, Peso, types } =
     input;
   const { name, hp, att, def, speed, img, height, weig, type } = prevew;
-  console.log(input.Tipo);
+  console.log(input.types);
+  console.log()
   return (
     <div className="big">
       <h2>Crea a tu Pokemon</h2>
@@ -202,6 +205,9 @@ export default function Creador() {
           <label>Vida:</label>
           <input
             type="number"
+            min="1" 
+            step="1"
+
             name="Vida"
             onChange={handleInputChange}
             value={Vida}
@@ -211,6 +217,9 @@ export default function Creador() {
           <label>Fuerza:</label>
           <input
             type="number"
+            min="1" 
+            step="1"
+
             name="Fuerza"
             onChange={handleInputChange}
             value={Fuerza}
@@ -220,6 +229,9 @@ export default function Creador() {
           <label>Defensa:</label>
           <input
             type="number"
+            min="1" 
+            step="1"
+
             name="Defensa"
             onChange={handleInputChange}
             value={Defensa}
@@ -229,6 +241,9 @@ export default function Creador() {
           <label>Velocidad:</label>
           <input
             type="number"
+            min="1" 
+            step="1"
+
             name="Velocidad"
             onChange={handleInputChange}
             value={Velocidad}
@@ -247,6 +262,9 @@ export default function Creador() {
           <label>Altura:</label>
           <input
             type="number"
+            min="1" 
+            step="1"
+
             name="Altura"
             onChange={handleInputChange}
             value={Altura}
@@ -256,6 +274,9 @@ export default function Creador() {
           <label>Peso:</label>
           <input
             type="number"
+            min="1" 
+            step="1"
+
             name="Peso"
             onChange={handleInputChange}
             value={Peso}
@@ -320,9 +341,9 @@ export default function Creador() {
             <div className="cardano">
             <h2>
               Tipo/s:{" "}
-              {typeFilters.map((e, i) => {
+              {input.types ? input.types.map((e, i) => {
                 return <div key={i}>{e}</div>;
-              })}
+              }) : <spam>No Type</spam>}
             </h2>
             </div>
             <form

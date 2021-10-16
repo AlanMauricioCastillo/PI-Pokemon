@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { getPaged } from "../../actions/getPaged";
+import { filtrarPokemonNoPropios } from "../../actions/filtrarPokemonNoPropios";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { orderAsc } from "../../actions/orderAsc";
@@ -18,6 +19,7 @@ import "./Main.css";
 
 export default function Main() {
   const dispatch = useDispatch();
+  const [pageFrom, setPageFrom] = React.useState("");
   const [serchTipes, setSerchTypes] = React.useState("");
   const [tiposLState, setTiposLState] = React.useState([]);
   const [filtrando, setFiltrando] = React.useState("");
@@ -26,7 +28,7 @@ export default function Main() {
   const [paged, setPaged] = React.useState("");
   const [pagedApi, setPagedApi] = React.useState("");
   const [update, setUpdate] = React.useState("");
-  const [pag, setpag] = React.useState(1);
+  const [pag, setpag] = React.useState("");
   const [pokemonsOnscreen, setpokemonsOnscreen] = React.useState("");
   const [own, setOwn] = React.useState("");
   // eslint-disable-next-line no-unused-vars
@@ -54,14 +56,25 @@ export default function Main() {
     if(!Pokemons.pokemons && Pokemons.length < 1) {
       dispatch(getThemAll());
     }
-}, [Pokemons]);
+    if(pageFrom === "own") {
+      setpokemonsOnscreen(Pokemons);
+    } if(pageFrom === "alien") {
+      setpokemonsOnscreen(PokemonsNoP)
+    }
+}, [Pokemons, PokemonsNoP, dispatch, pageFrom]);
 
   useEffect(() => {
-    if (serchTipes !== "") dispatch(typeFilter({ pokemons: serchTipes }));
+    if (serchTipes !== "") {
+      /* if(pageFrom === "own") { */
+        dispatch(typeFilter({ pokemons: serchTipes }))
+      /* } else if(pageFrom === "alien") {
+        dispatch(typeFilter({ pokemonsNoPropios: serchTipes }))
+      } */
+    };
     setSerchTypes("");
-  }, [serchTipes]);
+  }, [dispatch, serchTipes]);
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (hide === "api") {
       if(PokemonsNoP.length < 1) {
         dispatch(filterApi());
@@ -77,22 +90,22 @@ export default function Main() {
       document.getElementById("paginationApi").style.display = "none";
       document.getElementById("pagination").style.display = "none";
     }
-  }, [hide]);
+  }, [hide]); */
 
   useEffect(() => {
     if (update === "back to basic") {
       dispatch(getThemAll());
       setUpdate("");
-      dispatch(getOwn());
+      //dispatch(getOwn());
     }
   }, [dispatch, update]);
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (paged !== "") {
       dispatch(getPaged(paged));
       setPaged("");
     }
-  }, [dispatch, paged]);
+  }, [dispatch, paged]); */
 
   /////////////////////////////////////////los 40 paginados desde el back
   /*   useEffect(() => {
@@ -109,10 +122,10 @@ export default function Main() {
     setPagedApi("")
   }
 },[dispatch, pagedApi]) */
-
+/* 
   useEffect(() => {
     if (pagedApi !== "" && PokemonsNoP.pokemons) {
-      console.log("entre");
+      console.log(PokemonsNoP.pokemons);
       let arr = [];
       if (pagedApi === "4") {
         for (let i = 36; i < 40; i++) {
@@ -120,32 +133,33 @@ export default function Main() {
           arr.push(PokemonsNoP.pokemons[i]);
         }
       } else {
-        for (let i = pagedApi * 12 - 12; i < pagedApi * 12; i++) {
+      console.log(PokemonsNoP);
+        for (let i = parseInt(pagedApi, 10) * 12 - 12; i < parseInt(pagedApi, 10) * 12; i++) {
           let sum = i + 1;
-          let pos = PokemonsNoP.pokemons[sum].id;
-          arr.push(PokemonsNoP.pokemons[pos]);
+          arr.push(PokemonsNoP.pokemons[sum]);
         }
       }
-      //console.log(arr);
+      console.log(arr);
       setpokemonsOnscreen({ pokemons: arr });
+      //setPagedApi("1");
     }
-  }, [PokemonsNoP, pagedApi]);
+  }, [PokemonsNoP, pagedApi]); */
   ////////////////////////////////////////////
   useEffect(() => {
     if (own !== "") {
       //console.log(pokemonsPropios)
-      if(pokemonsPropios.length < 1 || pokemonsPropios.pokemons.length < 1) {
+      if(pokemonsPropios.length < 1) {
         //dispatch(filterApi());
         alert("¡no thing here!")
       } else {
         let pokemons = [];
-        for (let i = 0; i < pokemonsPropios.pokemons.length; i++) {
+        for (let i = 0; i < pokemonsPropios.length; i++) {
           pokemons.push({
-            id: pokemonsPropios.pokemons[i].id,
-            name: pokemonsPropios.pokemons[i].Nombre,
-            types: pokemonsPropios.pokemons[i].Types.map((tipo) => tipo.Nombre),
-            imagen: pokemonsPropios.pokemons[i].Imagen,
-            fuerza: pokemonsPropios.pokemons[i].Fuerza,
+            id: pokemonsPropios[i].id,
+            name: pokemonsPropios[i].Nombre,
+            types: pokemonsPropios[i].Types.map((tipo) => tipo.Nombre),
+            imagen: pokemonsPropios[i].Imagen,
+            fuerza: pokemonsPropios[i].Fuerza,
           });
         }
 
@@ -156,20 +170,22 @@ export default function Main() {
     }
   }, [own]);
 
-  let paginamax = 90;
+  /* let paginamax = 3; */
   const hendlestate = (e) => {
-    if (e === "back") {
+    console.log(e)
+    
+    /* if (e === "back") {
       setpag(pag - 6);
     }
     if (e === "next") {
       setpag(pag + 6);
-    }
+    } */
     if (e === "main") {
       setUpdate("back to basic");
-      setHide("all");
-      setpag(1);
-      setPaged("");
-    }
+      setHide("nones");
+      setpag("");
+      //setPaged("");
+    } /* else setpag(parseInt(e, 10)) */
   };
 
   const hendleChange = (e) => {
@@ -187,6 +203,7 @@ export default function Main() {
     /* if() */
     //console.log(e)
     const comand = e.target.value;
+    console.log(comand)
     if (comand === "none" || comand === "refresh") {
       tiposLState.forEach((element) => {
         document.getElementById(element.Nombre).style.backgroundColor =
@@ -194,27 +211,22 @@ export default function Main() {
       });
       setTypeFilters([]);
       console.log(e.target.name)
-      console.log(comand)
-      setPagedApi("")
-      /* if(e.target.name === "procedencia" && comand === "none") {
+      //setPagedApi("")
+    }
+      if(e.target.name === "procedencia" && comand === "none") {
         
         if(PokemonsNoP.pokemons !== undefined && PokemonsNoP.pokemons.length < 1) {
         console.log('bien')
         setHide("api");
-          setPagedApi(1);
-        } */
-      //} else {
-        //console.log('la cago')
+          //setpag(1);
+      
         setUpdate("back to basic");
       //}
     }
-    if (comand === "A-Z") {
-      let aux;
-      if (PokemonsNoP.pokemons) {
-        aux = PokemonsNoP;
-      } else {
-        aux = pokemonsOnscreen;
-      }
+    }
+    if (comand === "A-Z" && pageFrom === "own") {
+      console.log('entre a-z igual a own')
+      let aux = pokemonsOnscreen;
       aux.pokemons.sort((a, b) => {
         if (a.name > b.name) {
           return 1;
@@ -224,13 +236,23 @@ export default function Main() {
       });
       dispatch(orderAsc(aux));
     }
-    if (comand === "Z-A") {
-      let aux;
-      if (PokemonsNoP.pokemons) {
-        aux = PokemonsNoP;
-      } else {
-        aux = pokemonsOnscreen;
-      }
+    //console.log(pageFrom)
+    if (comand === "A-Z" && pageFrom !== "own") {
+      console.log('entre a-z dist')
+      let aux = PokemonsNoP
+      aux.pokemons.sort((a, b) => {
+        if (a.name > b.name) {
+          return 1;
+        } else {
+          return -1;
+        }
+      });
+      console.log(aux)
+      dispatch(filtrarPokemonNoPropios(aux))
+      setPagedApi("1");
+    }
+    if (comand === "Z-A" && pageFrom === "own") {
+      let aux = pokemonsOnscreen;
       aux.pokemons.sort((a, b) => {
         if (a.name < b.name) {
           return 1;
@@ -240,19 +262,26 @@ export default function Main() {
       });
       dispatch(orderDes(aux));
     }
+    if (comand === "Z-A" && pageFrom !== "own") {
+      let aux = PokemonsNoP
+      aux.pokemons.sort((a, b) => {
+        if (a.name < b.name) {
+          return 1;
+        } else {
+          return -1;
+        }
+      });
+      dispatch(filtrarPokemonNoPropios(aux))
+      setPagedApi("1");
+    }
     if (comand !== "A-Z" && comand !== "Z-A") {
       setInput((prev) => ({
         ...prev,
         alfabetico: "",
       }));
     }
-    if (comand === "Mayor") {
-      let aux;
-      if (PokemonsNoP.pokemons) {
-        aux = PokemonsNoP;
-      } else {
-        aux = pokemonsOnscreen;
-      }
+    if (comand === "Mayor" && pageFrom === "own") {
+      let aux = pokemonsOnscreen;
       aux.pokemons.sort((a, b) => {
         if (a.fuerza < b.fuerza) {
           return 1;
@@ -262,13 +291,20 @@ export default function Main() {
       });
       dispatch(forceAsc(aux));
     }
-    if (comand === "Menor") {
-      let aux;
-      if (PokemonsNoP.pokemons) {
-        aux = PokemonsNoP;
-      } else {
-        aux = pokemonsOnscreen;
-      }
+    if (comand === "Mayor" && pageFrom !== "own") {
+      let aux = PokemonsNoP
+      aux.pokemons.sort((a, b) => {
+        if (a.fuerza < b.fuerza) {
+          return 1;
+        } else {
+          return -1;
+        }
+      });
+      dispatch(filtrarPokemonNoPropios(aux))
+      setPagedApi("1");
+    }
+    if (comand === "Menor" && pageFrom === "own") {
+      let aux = pokemonsOnscreen;
       aux.pokemons.sort((a, b) => {
         if (a.fuerza > b.fuerza) {
           return 1;
@@ -277,6 +313,18 @@ export default function Main() {
         }
       });
       dispatch(forceDes(aux));
+    }
+    if (comand === "Menor" && pageFrom !== "own") {
+      let aux = PokemonsNoP
+      aux.pokemons.sort((a, b) => {
+        if (a.fuerza > b.fuerza) {
+          return 1;
+        } else {
+          return -1;
+        }
+      });
+      dispatch(filtrarPokemonNoPropios(aux))
+      setPagedApi("1");
     }
     if (comand !== "Mayor" && comand !== "Menor") {
       setInput((prev) => ({
@@ -289,30 +337,35 @@ export default function Main() {
     /* if(comand === "Preexistentes") {
       setHide("api")
       //setPagedApi(1)
-      setPagedApi(1);
+      //setPagedApi(1);
 
     } else if (comand === "Creados") {
       setHide("nones")
     } else {
-      setHide("all")
+      setHide("nones")
     } */
     //////////////////////////////////////////////////
     /////////////////////////////////////////////////los 40 en una pagina
     if (comand === "Preexistentes") {
+      setPageFrom("alien")
       console.log(PokemonsNoP)
       if(typeof PokemonsNoP.pokemons === "object" && PokemonsNoP.pokemons.length > 0) {
-        console.log('entro')
+        console.log('entro a pre')
         setHide("api");
-        setPagedApi(1);
+        setpag(1);
       } else {
         dispatch(filterApi());
         alert("aun esperando el respond!")
       }
     }
+    console.log(pageFrom)
     if (comand === "Creados") {
+      dispatch(getOwn())
+      //setPageFrom("own")
       console.log('entre a creado')
       setOwn("call");
-      if(pokemonsPropios.Pokemons !== undefined && pokemonsPropios.pokemons.length > 0) {
+      //console.log(pokemonsPropios.Pokemons)
+      if(pokemonsPropios.length < 1) {
         
         console.log('entre a creado if')
         alert("¡no thing here!")
@@ -322,9 +375,12 @@ export default function Main() {
         setHide("nones");
       }
     }
+    console.log(pageFrom)
     if (comand === "none") {
-      setHide("all");
+      setPageFrom("own")
+      setHide("nones");
     }
+    console.log(pageFrom)
     ////////////////////////////////////////////////////
     if (comand !== "Creados" && comand !== "Preexistentes") {
       setInput((prev) => ({
@@ -333,7 +389,9 @@ export default function Main() {
       }));
     }
     if (e.target.name === "tipos" && comand !== "refresh") {
-      setFiltrando(Pokemons.pokemons);
+      /* if(pageFrom === "own"){ */
+        setFiltrando(Pokemons.pokemons);
+      /* } else setFiltrando(PokemonsNoP.pokemons); */
       let arr;
       //console.log(typeFilters)
       //console.log(comand,'comand')
@@ -381,11 +439,36 @@ export default function Main() {
       //filtra arre!!!!!!!!!!!!!!!!!!!!!!
       const dataArr = new Set(arre);
       let result = [...dataArr];
-      console.log(arre);
+      console.log(result);
       setSerchTypes(result);
+      setpokemonsOnscreen(result)
     }
   };
 
+  console.log(pag)
+  useEffect(() => {
+    if (pag !== "") {
+      console.log(PokemonsNoP.pokemons);
+      let arr = [];
+      if (pag === "4") {
+        for (let i = 36; i < 40; i++) {
+          //console.log(PokemonsNoP.pokemons[i])
+          arr.push(PokemonsNoP.pokemons[i]);
+        }
+      } else {
+      console.log(PokemonsNoP);
+        for (let i = pag * 12 - 12; i < pag * 12; i++) {
+          let sum = i + 1;
+          //console.log(sum)
+          arr.push(PokemonsNoP.pokemons[sum]);
+        }
+      }
+      console.log(arr);
+      setpokemonsOnscreen({ pokemons: arr });
+      //setPagedApi("1");
+    }
+  }, [pag]);
+  console.log(PokemonsNoP);
   console.log(pokemonsOnscreen);
   return (
     <div className="big">
@@ -494,43 +577,35 @@ export default function Main() {
             if (e.target.name !== "back" && e.target.name !== "next") {
               if (pag === 1) {
                 //console.log(e.target.innerText)
-                e.target.innerText !== "Main" && setPaged(e.target.value);
-              } else e.target.innerText !== "Main" && setPaged(e.target.value);
+                e.target.innerText !== "Main" && setpag(e.target.value);
+              } else e.target.innerText !== "Main" && setpag(e.target.value);
             }
             hendlestate(e.target.name);
           }}
         >
-          {pag === 1 ? (
+          {/* {pag === 1 ? (
             ""
           ) : (
             <button className="" name="back">
               &laquo;
             </button>
-          )}
-          <button className="" id="main" name="main">
+          )} */}
+          {/* <button className="" id="main" name="main" value="main">
             Main
+          </button> */}
+          <button className="" id="pri" name={1} value={1}>
+            {1}
           </button>
-          <button className="" id="pri" name="pri" value={pag + 1}>
-            {pag}
+          <button className="" name={pag + 2} value={2}>
+            {2}
           </button>
-          <button className="" name="seg" value={pag + 2}>
-            {pag + 1}
-          </button>
-          {pag > paginamax ? (
-            ""
-          ) : (
-            <button className="" name="ter" value={pag + 3}>
-              {pag + 2}
+            <button className="" name={pag + 3} value={3}>
+              {3}
             </button>
-          )}
-          {pag > paginamax ? (
-            ""
-          ) : (
-            <button className="" name="cua" value={pag + 4}>
-              {pag + 3}
+            <button className="" name={pag + 4} value={4}>
+              {4}
             </button>
-          )}
-          {pag > paginamax ? (
+          {/* {pag > paginamax ? (
             ""
           ) : (
             <button className="" name="qui" value={pag + 5}>
@@ -550,11 +625,11 @@ export default function Main() {
             <button className="" name="next">
               &raquo;
             </button>
-          )}
+          )} */}
         </form>
       </div>
 
-      <div id="paginationApi" className="pagination">
+      {/* <div id="paginationApi" className="pagination">
         <form
           onClick={(e) => {
             e.preventDefault();
@@ -570,19 +645,19 @@ export default function Main() {
             Main
           </button>
           <button className="but" id="pri" name="pri">
-            1
+            {"1"}
           </button>
           <button className="but" name="seg">
-            2
+           {"2"}
           </button>
           <button className="but" name="ter">
-            3
+           {"3"}
           </button>
           <button className="but" name="cua">
-            4
+           {"4"}
           </button>
         </form>
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -59,7 +59,7 @@ const getThemAll = async (req, res, next) => {
         fuerza: pokemon.stats[1].base_stat,
       });
     });
-    res.json({ pokemons: array });
+    res.status(200).json({ pokemons: array });
     array = [];
   } catch (err) {
     next(err);
@@ -85,7 +85,7 @@ const getFromId = async (req, res, next) => {
         tipo: result.Types.map((tipo) => tipo.Nombre),
         vida: result.Vida,
       };
-      res.json(obj);
+      res.status(200).json(obj);
     } else {
       const result2 = await axios.get(URL.POKEMON_ID + id);
 
@@ -101,7 +101,7 @@ const getFromId = async (req, res, next) => {
         tipo: result2.data.types.map((tipo) => tipo.type.name),
         vida: result2.data.stats[0].base_stat,
       };
-      res.json(obj);
+      res.status(200).json(obj);
     }
   } catch (error) {
     console.log(error);
@@ -111,10 +111,10 @@ const getFromId = async (req, res, next) => {
 
 const getFromName = async (req, res, next) => {
   const { name } = req.query;
-  if(!name) res.send('Reacer el formulario')
+  if (!name) res.status(404).send("Reacer el formulario");
   try {
     const result = await Pokemon.findOne({
-      where: { Nombre: name },
+      where: { Nombre: name.toLowerCase() },
       include: Type,
     });
     if (result) {
@@ -130,9 +130,9 @@ const getFromName = async (req, res, next) => {
         tipo: result.Types.map((tipo) => tipo.Nombre),
         vida: result.Vida,
       };
-      res.json(obj);
+      res.status(200).json(obj);
     } else {
-      const result2 = await axios.get(URL.POKEMON_NAME + name);
+      const result2 = await axios.get(URL.POKEMON_NAME + name.toLowerCase());
       const obj = {
         nombre: result2.data.name,
         id: result2.data.id,
@@ -145,7 +145,7 @@ const getFromName = async (req, res, next) => {
         tipo: result2.data.types.map((tipo) => tipo.type.name),
         vida: result2.data.stats[0].base_stat,
       };
-      res.json(obj);
+      res.status(200).json(obj);
     }
   } catch (error) {
     console.log(error);
@@ -154,7 +154,7 @@ const getFromName = async (req, res, next) => {
 };
 
 const newPokemon = async (req, res, next) => {
-  if(!req.body) res.send('Reacer el formulario')
+  if (!req.body) res.send("Reacer el formulario");
   const {
     Nombre,
     Vida,
@@ -164,7 +164,7 @@ const newPokemon = async (req, res, next) => {
     Imagen,
     Altura,
     Peso,
-    Tipo,
+    types,
   } = req.body;
   try {
     if (!(await Pokemon.findOne({ where: { Nombre: Nombre } }))) {
@@ -181,9 +181,11 @@ const newPokemon = async (req, res, next) => {
         },
       });
       let arr = [];
-      Tipo.forEach(async (e) => {
+      types.forEach(async (e) => {
+        console.log(e)
         const value = await Type.findOne({ where: { Nombre: e } });
         !!value && !!result && result.addType(value);
+        console.log(value)
         arr.push(value.dataValues.Nombre);
       });
       const valueAlt = await Pokemon.findByPk(result.dataValues.id);
@@ -196,7 +198,8 @@ const newPokemon = async (req, res, next) => {
           fuerza: valueAlt.Fuerza,
         };
         if (status && !!arr.length) {
-          res.json(data);
+          console.log(data,'entro')
+          res.status(200).json(data);
         } else res.sendStatus(500);
       }
     } else res.sendStatus(500);
@@ -236,7 +239,7 @@ const getPaged = async (req, res, next) => {
           fuerza: pokemon.stats[1].base_stat,
         });
       });
-      return res.json({ pokemons: pages });
+      return res.status(200).json({ pokemons: pages });
     }
   } catch (err) {
     next(err);
@@ -249,9 +252,8 @@ const getCreated = async (req, res, next) => {
       model: Pokemon,
       include: Type,
     });
-
     if (pDb) {
-      res.json({ pokemons: pDb });
+      res.status(200).json( pDb );
     }
   } catch (err) {
     next(err);
@@ -300,9 +302,21 @@ const getFromAlienOwner = async (req, res, next) => {
   try {
     let pokemonsOnPages = [];
     let pages = [];
-    for (let i = 1; i < 41; i++) {
-      pokemonsOnPages.push(axios.get(URL.POKEMON_ID + i));
+    let first = await axios.get(URL.POKEMON);
+    if (first) {
+      //console.log(first.data.results)
+      first.data.results.forEach((e) => {
+        pokemonsOnPages.push(axios.get(`${e.url}`));
+      });
+      let secund = await axios.get(first.data.next);
+      if (secund) {
+        secund.data.results.forEach((e) => {
+          pokemonsOnPages.push(axios.get(`${e.url}`));
+        });
+      }
     }
+    pokemonsOnPages.forEach(e=>console.log(e))
+
     let e = await Promise.all(pokemonsOnPages);
     e &&
       e.forEach((result) => {
@@ -315,7 +329,7 @@ const getFromAlienOwner = async (req, res, next) => {
           fuerza: pokemon.stats[1].base_stat,
         });
       });
-    res.json({ pokemons: pages });
+    res.status(200).json({ pokemons: pages });
   } catch (err) {
     next(err);
   }

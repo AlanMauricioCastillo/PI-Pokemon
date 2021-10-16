@@ -26,6 +26,7 @@
 
 .card-title {
   margin-bottom: 15px;
+  text-transform: capitalize;
 }
 
 #closeIcon {

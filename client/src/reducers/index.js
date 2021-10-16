@@ -9,6 +9,7 @@ import {
   FORCE_ASC,
   FORCE_DES,
   TYPE_FILTER,
+  ALIEN_FILTER,
   FROM_API,
   CLEAR,
   PAGES,
@@ -27,6 +28,7 @@ const initialState = {
 };
 
 export default function rootReducer(state = initialState, action) {
+  console.log(state.pokemonsPropios);
   switch (action.type) {
     case GET_THEM_ALL:
       return {
@@ -85,11 +87,26 @@ export default function rootReducer(state = initialState, action) {
         ...state,
         pokemonsFilter: action.payload,
       };
-    case TYPE_FILTER:
+    case ALIEN_FILTER:
       return {
         ...state,
-        pokemons: action.payload,
+        pokemonsFilter: action.payload,
       };
+    case TYPE_FILTER:
+      /* if(action.payload.pokemons) { */
+        return {
+          ...state,
+          pokemons: action.payload,
+        };
+      /* } else if (action.payload.pokemonsNoPropios) {
+        let filt = {
+          pokemons: action.payload.pokemonsNoPropios
+        }
+        return {
+          ...state,
+          pokemons: filt,
+        };
+      } break */
     case CLEAR:
       return {
         ...state,
@@ -101,23 +118,44 @@ export default function rootReducer(state = initialState, action) {
         pokemons: action.payload,
       };
     case ADD:
-      const i = state.pokemonsPropios.find(
-        (e) => e.name === action.payload.data.name
-      );
-      if (!i) {
-        console.log('akasssssssssssssssssssssss')
+      console.log("entro al add");
+      if (
+        typeof state.pokemonsPropios === "object" &&
+        state.pokemonsPropios.length > 0
+      ) {
+        /* const i = state.pokemonsPropios.find(
+          (e) => e.Nombre === action.payload.Nombre
+          ); */
+        if (!state.pokemonsPropios.includes(action.payload.name)) {
+          console.log(state.pokemonsPropios);
+          console.log("entro al if");
+          alert("¡Well done Pokemon created!");
+          return {
+            ...state,
+            pokemonsPropios: [...state.pokemonsPropios, action.payload],
+          };
+        } else {
+          console.log("entro al else del if if");
+
+          alert("the Pokemon all ready exist");
+          return {
+            ...state,
+            pokemonsPropios: [...state.pokemonsPropios],
+          };
+        }
+      }
+      if (
+        typeof state.pokemonsPropios === "object" &&
+        state.pokemonsPropios.length < 1
+      ) {
+        console.log("entro al else");
         alert("¡Well done Pokemon created!");
-        return {
-          ...state,
-          pokemonsPropios: [...state.pokemonsPropios, action.payload],
-        };
-      } else {
-        alert("the Pokemon all ready");
         return {
           ...state,
           pokemonsPropios: [...state.pokemonsPropios],
         };
       }
+      break;
     default:
       return state;
   }

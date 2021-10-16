@@ -5,11 +5,17 @@ import { CALL } from "../Variables";
 export function newPokemon(payload) {
   return async function (dispatch) {
     try {
+      //console.log(payload)
       const call = await axios.post(CALL.NEW, payload)
-      dispatch({ type: ADD, payload: call.data });
+      if(call) {
+        alert('¡Pokemon creado!') 
+        dispatch({ type: ADD, payload: call.data });
+      }
     } catch (e) {
-      console.log("¡el llamado de newPokemon fallo!");
-      alert('El pokemon ya existe')
+      console.log(e);
+      if(e) {
+        alert('El pokemon ya existe')
+      }
     }
   };
 }

@@ -16,8 +16,8 @@ export default function FirsContact() {
     dispatch(getThemAll())
   },[dispatch])
   useEffect(() => {
-    console.log('entre al use')
-    console.log(PokemonsNoP)
+   /*  console.log('entre al use')
+    console.log(PokemonsNoP) */
     if(!PokemonsNoP.pokemons || PokemonsNoP.pokemons.length < 1) {
       dispatch(filterApi())
     }
