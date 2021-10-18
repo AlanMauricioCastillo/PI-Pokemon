@@ -6,7 +6,6 @@ export function getThemAll() {
   return async function (dispatch) {
     try {
       const call = await axios.get(CALL.MAIN);
-      //console.log(call.data)
       dispatch({ type: GET_THEM_ALL, payload: call.data });
     } catch (e) {
       console.log("¡el llamado de getThemAll fallo!");

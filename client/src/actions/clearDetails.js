@@ -1,10 +1,8 @@
 import { CLEAR } from "./index";
 
-
 export function clearDetails() {
-    return { 
-      type: CLEAR, 
-      payload: {} 
-    };
-  
+  return {
+    type: CLEAR,
+    payload: {},
+  };
 }

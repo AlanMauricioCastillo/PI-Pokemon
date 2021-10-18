@@ -17,7 +17,7 @@ export default function Creador() {
   var tipos = useSelector((state) => state.pokemonsTypes);
   var creations = useSelector((state) => state.pokemonsPropios);
   const [tiposLState, setTiposLState] = React.useState([]);
-  const [hide, setHide] = React.useState("all");
+  //const [hide, setHide] = React.useState("all");
   const [call, setCall] = React.useState("");
   //const [render, setRender] = React.useState("");
   const [input, setInput] = React.useState({
@@ -47,11 +47,10 @@ export default function Creador() {
 
   const handleInputChangeTypes = (e) => {
     setTypeFilters([]);
-    let ar = []
+    let ar = [];
     let arr = [];
-    console.log(e.target.value);
     let comand = e.target.value;
-    ar.push(comand)
+    ar.push(comand);
     if (!typeFilters.includes(comand)) {
       document.getElementById(comand).style.backgroundColor = "red";
       setTypeFilters((prev) => [...prev, comand]);
@@ -72,7 +71,6 @@ export default function Creador() {
     }
 
     let value = [...input.types];
-    //console.log(value)
     if (!input.types.includes(e.target.value)) value.push(e.target.value);
     setInput((prev) => ({
       ...prev,
@@ -81,18 +79,16 @@ export default function Creador() {
   };
 
   const handlePrevew = (e) => {
-    if(creado.includes(input.Nombre)) {
-      hendleRefresh()
-      alert('¡el pokemon ya existe!')
+    if (creado.includes(input.Nombre)) {
+      hendleRefresh();
+      alert("¡el pokemon ya existe!");
     } else {
-      console.log(e);
       let arr = [];
       if (input.types) {
         arr = input.types.filter((e, i) => {
           return input.types.indexOf(e) === i;
         });
       }
-      console.log(arr)
       setPrevew((prev) => ({
         ...prev,
         name: input.Nombre,
@@ -118,7 +114,6 @@ export default function Creador() {
   };
 
   const hendleRefresh = (e) => {
-    console.log(e);
     setInput({
       Nombre: "",
       Vida: "",
@@ -129,62 +124,64 @@ export default function Creador() {
       Altura: "",
       Peso: "",
       types: [],
-      })
-      setPrevew((prev) => ({
-        ...prev,
-        name: "",
-        hp: "",
-        att: "",
-        def: "",
-        speed: "",
-        img: "",
-        height: "",
-        weig: "",
-        type: "",
-      }));
-      typeFilters.forEach((e) => {
-        document.getElementById(e).style.backgroundColor = "white";
-      })
-      dispatch(getThemAll())
+    });
+    setPrevew((prev) => ({
+      ...prev,
+      name: "",
+      hp: "",
+      att: "",
+      def: "",
+      speed: "",
+      img: "",
+      height: "",
+      weig: "",
+      type: "",
+    }));
+    typeFilters.forEach((e) => {
+      document.getElementById(e).style.backgroundColor = "white";
+    });
+    dispatch(getThemAll());
   };
 
   //console.log(creations);
   useEffect(() => {
     if (creations.pokemons) {
-      dispatch(getThemAll())
+      dispatch(getThemAll());
       dispatch(getOwn());
     }
-    console.log(input)
     if (call !== "") {
-      console.log(input)
       dispatch(newPokemon(input));
       setCall("");
       //alert("¡Well done Pokemon created!");
-      dispatch(getOwn());
-      hendleRefresh()
-      dispatch(getThemAll())
+      hendleRefresh();
+      dispatch(getThemAll());
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [call]);
 
   useEffect(() => {
     setTiposLState(tiposGState);
   }, [tiposGState]);
 
-  const { Nombre, Vida, Fuerza, Defensa, Velocidad, Imagen, Altura, Peso, types } =
-    input;
+  const {
+    Nombre,
+    Vida,
+    Fuerza,
+    Defensa,
+    Velocidad,
+    Imagen,
+    Altura,
+    Peso,
+    types,
+  } = input;
   const { name, hp, att, def, speed, img, height, weig, type } = prevew;
-  console.log(input.types);
-  console.log()
   return (
     <div className="big">
       <h2>Crea a tu Pokemon</h2>
-      <form className="form"
+      <form
+        className="form"
         id="form1"
         onSubmit={(e) => {
-          console.log(e.target);
           e.preventDefault();
-          //console.log(e,'prevewwww')
           handlePrevew();
         }}
       >
@@ -205,9 +202,8 @@ export default function Creador() {
           <label>Vida:</label>
           <input
             type="number"
-            min="1" 
+            min="1"
             step="1"
-
             name="Vida"
             onChange={handleInputChange}
             value={Vida}
@@ -217,9 +213,8 @@ export default function Creador() {
           <label>Fuerza:</label>
           <input
             type="number"
-            min="1" 
+            min="1"
             step="1"
-
             name="Fuerza"
             onChange={handleInputChange}
             value={Fuerza}
@@ -229,9 +224,8 @@ export default function Creador() {
           <label>Defensa:</label>
           <input
             type="number"
-            min="1" 
+            min="1"
             step="1"
-
             name="Defensa"
             onChange={handleInputChange}
             value={Defensa}
@@ -241,9 +235,8 @@ export default function Creador() {
           <label>Velocidad:</label>
           <input
             type="number"
-            min="1" 
+            min="1"
             step="1"
-
             name="Velocidad"
             onChange={handleInputChange}
             value={Velocidad}
@@ -262,9 +255,8 @@ export default function Creador() {
           <label>Altura:</label>
           <input
             type="number"
-            min="1" 
+            min="1"
             step="1"
-
             name="Altura"
             onChange={handleInputChange}
             value={Altura}
@@ -274,15 +266,13 @@ export default function Creador() {
           <label>Peso:</label>
           <input
             type="number"
-            min="1" 
+            min="1"
             step="1"
-
             name="Peso"
             onChange={handleInputChange}
             value={Peso}
           />
         </p>
-
         <div>
           <label>Tipo/s:</label>
           <select value="Tipo" onChange={handleInputChangeTypes}>
@@ -311,9 +301,7 @@ export default function Creador() {
 
         <input
           onChange={(e) => {
-            console.log(e.target);
             e.preventDefault();
-            //console.log(e,'prevewwww')
             handlePrevew();
           }}
           id="submitPrevew"
@@ -322,49 +310,49 @@ export default function Creador() {
           value="Prevew"
         />
       </form>
-
-      
       <div id="prevew" className="crea-containers">
         {name ? (
           <div className="crea-containers">
-          <div className="cardano">
-            <h1>{name}</h1>
-            <img src={img} alt={"im"} className="img" />
+            <div className="cardano">
+              <h1>{name}</h1>
+              <img src={img} alt={"im"} className="img" />
             </div>
             <div className="text">
-            <h2>Fuerza: {att}</h2>
-            <h2>Defensa: {def}</h2>
-            <h2>Altura: {height}</h2>
-            <h2>Peso: {weig}</h2>
-            <h2>Velocidad: {speed}</h2>
-            <h2>Vida: {hp}</h2>
-            <div className="cardano">
-            <h2>
-              Tipo/s:{" "}
-              {input.types ? input.types.map((e, i) => {
-                return <div key={i}>{e}</div>;
-              }) : <spam>No Type</spam>}
-            </h2>
-            </div>
-            <form
-              onClick={(e) => {
-                setCreado((prev)=>[...prev, input.Nombre])
-                e.preventDefault();
-                setCall("make");
-                //hendleRefresh()
-              }}
-            >
-              <input
-                onSubmit={(e) => {
-                  console.log(e.target);
+              <h2>Fuerza: {att}</h2>
+              <h2>Defensa: {def}</h2>
+              <h2>Altura: {height}</h2>
+              <h2>Peso: {weig}</h2>
+              <h2>Velocidad: {speed}</h2>
+              <h2>Vida: {hp}</h2>
+              <div className="cardano">
+                <h2>
+                  Tipo/s:{" "}
+                  {input.types ? (
+                    input.types.map((e, i) => {
+                      return <div key={i}>{e}</div>;
+                    })
+                  ) : (
+                    <spam>No Type</spam>
+                  )}
+                </h2>
+              </div>
+              <form
+                onClick={(e) => {
+                  setCreado((prev) => [...prev, input.Nombre]);
                   e.preventDefault();
+                  setCall("make");
                 }}
-                //onClick={hendleRefresh}
-                type="submit"
-                name="Crear"
-                value="Crear"
-              />
-            </form>
+              >
+                <input
+                  onSubmit={(e) => {
+                    console.log(e.target);
+                    e.preventDefault();
+                  }}
+                  type="submit"
+                  name="Crear"
+                  value="Crear"
+                />
+              </form>
             </div>
           </div>
         ) : (
@@ -374,13 +362,3 @@ export default function Creador() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-

@@ -46,12 +46,15 @@
   justify-content: center;
 }
 
+
+.pagination{
+  display: none;
+}
 .pagination button {
   border: none;
   background: red;
   cursor: pointer;
   padding: 8px 16px;
-  display: inline-block;
 }
 
 .but {
@@ -95,28 +98,27 @@ body {
 
 
 
-.forma {
-  border-radius: 15px;
-  background-color: rgb(230, 101, 54);
+.formas {
+  display: none;
+  border-top: red;
+  background-color: red;
   width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  flex-direction: row;
+  justify-content:space-around;
+  align-items: justify;
+  border-bottom:solid;
 }
 
-.forma input {
+.formas input {
   width: 90%;
   height: 30px;
   margin: 0.5rem;
 }
 
-.forma button {
+.formas button {
   padding: 0.5em 1em;
   border: none;
-  background: rgb(255, 0, 0);
+  background: rgb(230, 101, 54);
   cursor: pointer;
 }
 
@@ -135,10 +137,19 @@ body {
 .textBox {
   text-align: center;
   border-radius: 10px;
-  width: 120px;
+  width: 200px;
   background-color: rgb(230, 101, 54);
 }
 
 .big {
   padding-top: 60px;
+}
+
+.begin {
+  border:none;
+  border-bottom: solid;
+  border-top: solid;
+  color: black;
+  background-color: red;
+  width: 100%;
 }

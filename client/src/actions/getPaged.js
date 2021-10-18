@@ -5,11 +5,10 @@ import { CALL } from "../Variables";
 export function getPaged(page) {
   return async function (dispatch) {
     try {
-    console.log(page)
-    const call = await axios.get(CALL.PAGES + page)
-        dispatch({ type: PAGES, payload: call.data });
-      } catch (e) {
-        console.log("¡el llamado de getPaged fallo!");
-      }
+      const call = await axios.get(CALL.PAGES + page);
+      dispatch({ type: PAGES, payload: call.data });
+    } catch (e) {
+      console.log("¡el llamado de getPaged fallo!");
+    }
   };
 }

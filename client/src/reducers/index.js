@@ -75,13 +75,6 @@ export default function rootReducer(state = initialState, action) {
         ...state,
         pokemons: action.payload,
       };
-    //los 40 paginados del back
-    /* case FROM_API:
-      return {
-        ...state,
-        pokemons: action.payload,
-      }; */
-    //los 40
     case FROM_API:
       return {
         ...state,
@@ -93,20 +86,10 @@ export default function rootReducer(state = initialState, action) {
         pokemonsFilter: action.payload,
       };
     case TYPE_FILTER:
-      /* if(action.payload.pokemons) { */
         return {
           ...state,
           pokemons: action.payload,
         };
-      /* } else if (action.payload.pokemonsNoPropios) {
-        let filt = {
-          pokemons: action.payload.pokemonsNoPropios
-        }
-        return {
-          ...state,
-          pokemons: filt,
-        };
-      } break */
     case CLEAR:
       return {
         ...state,
@@ -118,7 +101,6 @@ export default function rootReducer(state = initialState, action) {
         pokemons: action.payload,
       };
     case ADD:
-      console.log("entro al add");
       if (
         typeof state.pokemonsPropios === "object" &&
         state.pokemonsPropios.length > 0
@@ -127,15 +109,12 @@ export default function rootReducer(state = initialState, action) {
           (e) => e.Nombre === action.payload.Nombre
           ); */
         if (!state.pokemonsPropios.includes(action.payload.name)) {
-          console.log(state.pokemonsPropios);
-          console.log("entro al if");
           alert("¡Well done Pokemon created!");
           return {
             ...state,
             pokemonsPropios: [...state.pokemonsPropios, action.payload],
           };
         } else {
-          console.log("entro al else del if if");
 
           alert("the Pokemon all ready exist");
           return {
@@ -148,7 +127,6 @@ export default function rootReducer(state = initialState, action) {
         typeof state.pokemonsPropios === "object" &&
         state.pokemonsPropios.length < 1
       ) {
-        console.log("entro al else");
         alert("¡Well done Pokemon created!");
         return {
           ...state,

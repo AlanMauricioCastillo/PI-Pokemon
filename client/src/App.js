@@ -22,10 +22,6 @@ function App() {
     dispatch(getTypes());
   });
 
-  /* useEffect(() => {
-    dispatch(getOwn())
-  }, []) */
-
   return (
     <BrowserRouter>
       <div className="App">

@@ -22,7 +22,7 @@ export function filterApi() {
       const call = await axios.get(CALL.FORTY);
       dispatch({ type: FROM_API, payload: call.data });
     } catch (e) {
-      alert("¡el llamado de filterApi fallo!");
+      console.log("¡el llamado de filterApi fallo!");
     }
   };
 }

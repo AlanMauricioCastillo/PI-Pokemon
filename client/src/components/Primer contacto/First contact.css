@@ -10,8 +10,8 @@
   background-size: cover;
 }
 .get {
+  display: none;
   border-radius: 15px;
-  
   top: 235px;
   left: 330px;
   width: 110px;

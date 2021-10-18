@@ -2,8 +2,6 @@ const { Pokemon, Type, PokemonType } = require("../db");
 const axios = require("axios");
 const { URL } = require("../Variables");
 
-let array = [];
-
 const apiCall = async () => {
   try {
     const first = await axios.get(URL.POKEMON);
@@ -20,6 +18,7 @@ const apiCall = async () => {
 };
 
 const getThemAll = async (req, res, next) => {
+  let array = [];
   const { name } = req.query;
   if (name) return next();
   try {
@@ -39,7 +38,7 @@ const getThemAll = async (req, res, next) => {
       array.push({
         id: e.id,
         name: e.Nombre,
-        types: arr.map((tipo) => tipo),
+        Types: arr.map((tipo) => tipo),
         imagen: e.Imagen,
         fuerza: e.Fuerza,
       });
@@ -54,7 +53,7 @@ const getThemAll = async (req, res, next) => {
       array.push({
         id: pokemon.id,
         name: pokemon.name,
-        types: pokemon.types.map((e) => e.type.name),
+        Types: pokemon.types.map((e) => e.type.name),
         imagen: pokemon.sprites.other["official-artwork"].front_default,
         fuerza: pokemon.stats[1].base_stat,
       });
@@ -182,10 +181,8 @@ const newPokemon = async (req, res, next) => {
       });
       let arr = [];
       types.forEach(async (e) => {
-        console.log(e)
         const value = await Type.findOne({ where: { Nombre: e } });
         !!value && !!result && result.addType(value);
-        console.log(value)
         arr.push(value.dataValues.Nombre);
       });
       const valueAlt = await Pokemon.findByPk(result.dataValues.id);
@@ -193,12 +190,11 @@ const newPokemon = async (req, res, next) => {
         const data = {
           id: valueAlt.id,
           name: valueAlt.Nombre,
-          types: arr.map((tipo) => tipo),
+          Types: arr.map((tipo) => tipo),
           imagen: valueAlt.Imagen,
           fuerza: valueAlt.Fuerza,
         };
         if (status && !!arr.length) {
-          console.log(data,'entro')
           res.status(200).json(data);
         } else res.sendStatus(500);
       }
@@ -234,7 +230,7 @@ const getPaged = async (req, res, next) => {
         pages.push({
           id: pokemon.id,
           name: pokemon.name,
-          types: pokemon.types.map((e) => e.type.name),
+          Types: pokemon.types.map((e) => e.type.name),
           imagen: pokemon.sprites.other["official-artwork"].front_default,
           fuerza: pokemon.stats[1].base_stat,
         });
@@ -248,12 +244,22 @@ const getPaged = async (req, res, next) => {
 
 const getCreated = async (req, res, next) => {
   try {
+    let array = [];
     const pDb = await Pokemon.findAll({
       model: Pokemon,
       include: Type,
     });
     if (pDb) {
-      res.status(200).json( pDb );
+      pDb.forEach((e) => {
+        array.push({
+          id: e.id,
+          name: e.Nombre,
+          Types: e.Types.map((tipo) => tipo.Nombre),
+          imagen: e.Imagen,
+          fuerza: e.Fuerza,
+        });
+      });
+      res.status(200).json(array);
     }
   } catch (err) {
     next(err);
@@ -315,7 +321,6 @@ const getFromAlienOwner = async (req, res, next) => {
         });
       }
     }
-    pokemonsOnPages.forEach(e=>console.log(e))
 
     let e = await Promise.all(pokemonsOnPages);
     e &&
@@ -324,7 +329,7 @@ const getFromAlienOwner = async (req, res, next) => {
         pages.push({
           id: pokemon.id,
           name: pokemon.name,
-          types: pokemon.types.map((e) => e.type.name),
+          Types: pokemon.types.map((e) => e.type.name),
           imagen: pokemon.sprites.other["official-artwork"].front_default,
           fuerza: pokemon.stats[1].base_stat,
         });
